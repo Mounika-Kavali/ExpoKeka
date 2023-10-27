@@ -1,10 +1,24 @@
-import React from "react";
-import { View, Text, TextInput, Button, StyleSheet } from "react-native";
+import React, { useState } from "react";
+import {
+  View,
+  ScrollView,
+  Text,
+  TextInput,
+  Button,
+  StyleSheet,
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import styles from "../styles";
 import { FONTS, IMAGES, SIZES } from "../constants/Assets";
 
 const SignInScreen = () => {
-  const [text, onChangeText] = React.useState();
+  const navigation = useNavigation();
+  const [username, setUsername] = useState(""); // Initialize with an empty string
+  const [password, setPassword] = useState(""); // Initialize with an empty string
+
+  const handleSignIn = () => {
+    navigation.navigate("Home");
+  };
 
   return (
     <View style={{ flex: 1, paddingVertical: SIZES.p30 }}>
@@ -17,8 +31,8 @@ const SignInScreen = () => {
           style={styles.input}
           placeholder="Username"
           placeholderTextColor="gray"
-          onChangeText={onChangeText}
-          value={text}
+          onChangeText={setUsername}
+          value={username}
         />
 
         <TextInput
@@ -26,6 +40,8 @@ const SignInScreen = () => {
           placeholder="Password"
           placeholderTextColor="gray"
           secureTextEntry={true}
+          onChangeText={setPassword}
+          value={password}
         />
       </View>
       <View>
@@ -34,48 +50,16 @@ const SignInScreen = () => {
             style={{
               color: "blue",
               marginBottom: SIZES.p15,
-              fontSize: SIZES.medium
+              fontSize: SIZES.medium,
             }}
           >
             Forgot Password?
           </Text>
         </View>
-        <Button
-          title="Sign In"
-          onPress={() => {
-            // Handle sign-in logic here
-            // Typically, you would validate the input and navigate to the next screen
-          }}
-        />
+        <Button title="Sign In" onPress={handleSignIn} />
       </View>
     </View>
   );
 };
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     justifyContent: "center",
-//     alignItems: "center",
-//     padding: 16,
-//   },
-//   title: {
-//     fontSize: 20,
-//     fontWeight: "bold",
-//   },
-//   input: {
-//     width: "100%",
-//     height: 40,
-//     borderColor: "gray",
-//     borderWidth: 1,
-//     marginVertical: 10,
-//     paddingHorizontal: 10,
-//   },
-//   forgotPasswordLink: {
-//     color: "blue",
-//     textDecorationLine: "underline",
-//     marginBottom: 10,
-//   },
-// });
 
 export default SignInScreen;

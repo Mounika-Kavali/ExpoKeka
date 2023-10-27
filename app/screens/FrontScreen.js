@@ -15,19 +15,22 @@ import { FONTS, IMAGES, SIZES } from "../constants/Assets";
 import styles from "../styles";
 import Colors from "../constants/Colors";
 import SignInScreen from "../screens/SignInScreen";
+import { ScrollView } from "react-native-gesture-handler";
 
 const FrontScreen = () => {
   const navigation = useNavigation();
   const [showSignIn, setShowSignIn] = useState(false);
+  const [marginTop, setMarginTop] = useState(SIZES.threeQuarters);
 
   const handleGetStarted = () => {
     // navigation.navigate("SignIn");
     setShowSignIn(true);
   };
+  
 
   return (
-    <SafeAreaView style={[styles.container]}>
-      <View>
+    // <SafeAreaView style={[styles.container]}>
+      <ScrollView style={[styles.container]}>
         <ImageBackground
           source={IMAGES.neonFrontPage}
           style={{
@@ -39,12 +42,12 @@ const FrontScreen = () => {
         >
           <View
             style={{
-              flex: 1,
+               flex: 1,
               backgroundColor: Colors.white,
               marginTop: SIZES.threeQuarters,
               borderTopLeftRadius: SIZES.p40,
               borderTopRightRadius: SIZES.p40,
-              // paddingHorizontal: SIZES.p20,
+
             }}
           >
             <ImageBackground
@@ -59,7 +62,7 @@ const FrontScreen = () => {
             >
               {showSignIn ? (
                 <View  style={{
-                  flex: 1,
+                  // flex: 1,
                 }}>
                   <SignInScreen />
                 </View>
@@ -67,7 +70,7 @@ const FrontScreen = () => {
                 <>
                   <View
                     style={{
-                      flex: 1,
+                       flex: 1,
                       paddingHorizontal: SIZES.p20,
                       paddingTop: SIZES.p20,
                     }}
@@ -80,6 +83,7 @@ const FrontScreen = () => {
                       flex: 1,
                       justifyContent: "center",
                       alignItems: "center",
+                      // paddingVertical:110
                     }}
                   >
                     <TouchableOpacity onPress={handleGetStarted}>
@@ -108,8 +112,8 @@ const FrontScreen = () => {
             </ImageBackground>
           </View>
         </ImageBackground>
-      </View>
-    </SafeAreaView>
+      </ScrollView>
+    // </SafeAreaView>
   );
 };
 
