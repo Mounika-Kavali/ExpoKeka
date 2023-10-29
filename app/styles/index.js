@@ -29,7 +29,14 @@ const styles = StyleSheet.create({
         borderWidth: 1.2,
         borderColor: 'white',
         borderRadius: 10,
+    },
+    btn:{
+        // justifyContent:"center",
+        // alignItems:"center",
+        borderTopRadius:"50%",
+        color:"red",
     }
+
 
 });
 

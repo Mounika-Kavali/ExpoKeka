@@ -21,7 +21,7 @@ const SignInScreen = () => {
   };
 
   return (
-    <View style={{ flex: 1, paddingVertical: SIZES.p30 }}>
+    <ScrollView style={{ flex: 1, paddingVertical: SIZES.p30 }}>
       <View style={{ alignItems: "center" }}>
         <Text style={styles.h2}>Welcome Back!</Text>
         <Text style={{ ...styles.p, color: "pink" }}>
@@ -58,7 +58,7 @@ const SignInScreen = () => {
         </View>
         <Button title="Sign In" onPress={handleSignIn} />
       </View>
-    </View>
+    </ScrollView>
   );
 };
 

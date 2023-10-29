@@ -1,13 +1,11 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import HomePage from "../components/HomePage";
-// import MyTabs from "../navigation/BottomTabNavigator";
+import LeavesAttendancePage from "../components/LeavesAttendancePage";
 
-const HomeScreen = () => {
+const LeavesAttendanceScreen = () => {
   return (
     <View style={styles.container}>
-      <HomePage />
-      {/* <MyTabs/> */}
+      <LeavesAttendancePage />
     </View>
   );
 };
@@ -20,4 +18,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeScreen;
+export default LeavesAttendanceScreen;

@@ -30,7 +30,7 @@ const FrontScreen = () => {
 
   return (
     // <SafeAreaView style={[styles.container]}>
-      <ScrollView style={[styles.container]}>
+      <View style={[styles.container]}>
         <ImageBackground
           source={IMAGES.neonFrontPage}
           style={{
@@ -62,7 +62,7 @@ const FrontScreen = () => {
             >
               {showSignIn ? (
                 <View  style={{
-                  // flex: 1,
+                   flex: 1,
                 }}>
                   <SignInScreen />
                 </View>
@@ -70,9 +70,10 @@ const FrontScreen = () => {
                 <>
                   <View
                     style={{
-                       flex: 1,
+                       flex: 3,
                       paddingHorizontal: SIZES.p20,
                       paddingTop: SIZES.p20,
+                      justifyContent:"center"
                     }}
                   >
                     <Text style={styles.h2}>Welcome to HR Portal</Text>
@@ -112,7 +113,7 @@ const FrontScreen = () => {
             </ImageBackground>
           </View>
         </ImageBackground>
-      </ScrollView>
+      </View>
     // </SafeAreaView>
   );
 };
