@@ -70,7 +70,7 @@ const FrontScreen = () => {
                 <>
                   <View
                     style={{
-                       flex: 3,
+                       flex: 1,
                       paddingHorizontal: SIZES.p20,
                       paddingTop: SIZES.p20,
                       justifyContent:"center"

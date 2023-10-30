@@ -1,5 +1,7 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Image } from 'react-native';
+import {IMAGES} from '../constants/Assets'
 
 import HomeScreen from '../screens/HomeScreen';
 import ProfileScreen from '../screens/ProfileScreen';
@@ -10,39 +12,62 @@ const Tab = createBottomTabNavigator();
 const  MyTabs=()=> {
   return (
     <Tab.Navigator
-      initialRouteName="Feed"
+      initialRouteName="Home"
       screenOptions={{
-        tabBarActiveTintColor: '#e91e63',
+        tabBarActiveTintColor: 'blue',
       }}
     >
       <Tab.Screen
-        name="Feed"
+        name="Home"
         component={HomeScreen}
         options={{
-          tabBarLabel: 'Home',
+          tabBarLabel: '',
           tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="home" color={color} size={size} />
+            // <MaterialCommunityIcons name="home" color={color} size={size} />
+            <Image
+            source={IMAGES.home} 
+            style={{ width: size, height: size, tintColor: color }}
+          />
           ),
         }}
       />
       <Tab.Screen
-        name="Notifications"
-        component={ProfileScreen}
+        name="Leaves & Attendance"
+        component={LeavesAttendanceScreen}
         options={{
-          tabBarLabel: 'Updates',
+          tabBarLabel: '',
           tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="bell" color={color} size={size} />
+            <Image
+            source={IMAGES.calendar} 
+            style={{ width: size, height: size, tintColor: color }}
+          />
           ),
-          tabBarBadge: 3,
+         
         }}
       />
       <Tab.Screen
         name="Profile"
-        component={LeavesAttendanceScreen}
+        component={ProfileScreen}
         options={{
-          tabBarLabel: 'Profile',
+          tabBarLabel: '',
           tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="account" color={color} size={size} />
+            <Image
+            source={IMAGES.profile} 
+            style={{ width: size, height: size, tintColor: color }}
+          />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Chat"
+        component={ProfileScreen}
+        options={{
+          tabBarLabel: '',
+          tabBarIcon: ({ color, size }) => (
+            <Image
+            source={IMAGES.chat} 
+            style={{ width: size, height: size, tintColor: color }}
+          />
           ),
         }}
       />

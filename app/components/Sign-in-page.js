@@ -4,10 +4,12 @@ import {
   ScrollView,
   Text,
   TextInput,
+  TouchableOpacity,
   Button,
   StyleSheet,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { LinearGradient } from "expo-linear-gradient";
 import styles from "../styles";
 import { FONTS, IMAGES, SIZES } from "../constants/Assets";
 
@@ -17,7 +19,7 @@ const SignInScreen = () => {
   const [password, setPassword] = useState(""); // Initialize with an empty string
 
   const handleSignIn = () => {
-    navigation.navigate("Home");
+    navigation.navigate("Main");
   };
 
   return (
@@ -56,7 +58,27 @@ const SignInScreen = () => {
             Forgot Password?
           </Text>
         </View>
-        <Button title="Sign In" onPress={handleSignIn} />
+        {/* <Button title="Sign In" onPress={handleSignIn} /> // STYLES won't get applied to Button element*/} 
+        <TouchableOpacity onPress={handleSignIn}>
+                      <LinearGradient
+                        colors={[
+                          "rgba(184, 71, 230, 1)",
+                          "rgba(224, 34, 220, 1)",
+                          "rgba(204, 55, 118, 1)",
+                        ]}
+                        start={{ x: 0.0, y: 1.0 }}
+                        end={{ x: 1.0, y: 1.0 }}
+                        style={{
+                          padding: 10,
+                          alignItems: "center",
+                          justifyContent: "center",
+                          width: "100%",
+                          borderRadius: 10,
+                        }}
+                      >
+                        <Text style={styles.buttonText}>GET STARTED</Text>
+                      </LinearGradient>
+                    </TouchableOpacity>
       </View>
     </ScrollView>
   );

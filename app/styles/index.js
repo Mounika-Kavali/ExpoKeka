@@ -14,6 +14,27 @@ const styles = StyleSheet.create({
         fontSize:SIZES.p40,
         fontFamily:FONTS.bold
     },
+    h3:{
+        color:"black",
+        fontSize:SIZES.p30,
+        fontFamily:FONTS.bold
+    },
+    h4:{
+        color:"black",
+        fontSize:SIZES.p20,
+        fontFamily:FONTS.bold
+    },
+    h5:{
+        color:"black",
+        fontSize:SIZES.p15,
+        fontFamily:FONTS.bold
+    },
+    h6:{
+        color:"white",
+        fontSize:SIZES.p10,
+        fontFamily:FONTS.bold,
+        
+    },
     p:{
         color:"white",
         fontSize:SIZES.p15,
@@ -31,10 +52,13 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     btn:{
-        // justifyContent:"center",
-        // alignItems:"center",
-        borderTopRadius:"50%",
-        color:"red",
+        
+        borderWidth: 1.2,
+        borderColor: 'white',
+        borderRadius:50,
+        color:"white",
+        backgroundColor:"#6c0787",
+        padding:5,
     }
 
 

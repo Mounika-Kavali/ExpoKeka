@@ -2,9 +2,10 @@ const neonFrontPage = require("../../assets/images/NeonFrontPage.jpg");
 const mainScreen = require("../../assets/images/mainScreen.jpg");
 const user = require("../../assets/images/user.png");
 const passwordKey = require("../../assets/images/key.png");
-const profile = require("../../assets/images/user profile.png");
+const profile = require("../../assets/images/userProfile.png");
 const home = require("../../assets/images/house.png");
 const calendar = require("../../assets/images/calendar.png");
+const chat = require("../../assets/images/messenger.png")
 
 export const IMAGES = {
   user,
@@ -12,6 +13,7 @@ export const IMAGES = {
   profile,
   home,
   calendar,
+  chat,
   neonFrontPage,
   mainScreen
 };
