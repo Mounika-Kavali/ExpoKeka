@@ -40,6 +40,7 @@ const styles = StyleSheet.create({
         fontSize:SIZES.p15,
         fontFamily:FONTS.regular
     },
+    
     input:{
         width:"100%",
         height: 50,

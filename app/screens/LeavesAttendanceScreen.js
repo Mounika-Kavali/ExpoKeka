@@ -1,6 +1,6 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import LeavesAttendancePage from "../components/LeavesAttendancePage";
+import LeavesAttendancePage from "../components/leaves-attendance/LeavesAttendancePage";
 
 const LeavesAttendanceScreen = () => {
   return (
