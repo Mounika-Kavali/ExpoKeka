@@ -56,7 +56,7 @@ const LeavesAttendancePage = () => {
         <View
           style={{
             width: "100%",
-            borderRadius: 40,
+            borderRadius: 20,
             backgroundColor: "#d0ddfa",
           }}
         >
@@ -124,21 +124,20 @@ const LeavesAttendancePage = () => {
         </View>
 
         <View
-          style={{
-            width: "100%",
-            borderRadius: 40,
-            backgroundColor: "#d0ddfa",
-            marginTop: 50,
-          }}
+        style={{
+          width: "100%",
+          borderRadius: 20,
+          backgroundColor: "#d0ddfa",
+          marginTop: 50,
+        }}
         >
-          <View style={{
-            width: "100%",
-            height:900,
-            borderRadius: 40,
-            backgroundColor: "#d0ddfa",
-            marginTop: 20,
-          }}>
-            <LeavesTabs/>
+          <View
+            style={{
+              height: 900,
+              marginTop: 20,
+            }}
+          >
+            <LeavesTabs />
           </View>
         </View>
       </ScrollView>
