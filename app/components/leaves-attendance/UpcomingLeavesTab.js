@@ -31,18 +31,27 @@ function UpcomingLeavesTab() {
       approved: false,
       approvedBy: " ",
     },
-    // Add more data items as needed
+    {
+      id: 4,
+      fromDate: "Mar 2, 2023",
+      toDate: "Mar 5, 2023",
+      applyDays: 5,
+      leaveBalance: 19,
+      approved: true,
+      approvedBy: "musk ",
+    },
   ];
 
   return (
     // <ScrollView>
-    <FlatList
-      backgroundColor="#d0ddfa"
-      style={gridStyles.flatList}
-      data={UpcomingLeavesData}
-      keyExtractor={(item) => item.id.toString()}
-      renderItem={({ item }) => (
-        <View style={gridStyles.leaveItem}>
+    // <FlatList
+    //   backgroundColor="#e2eafa"
+    //   data={UpcomingLeavesData}
+    //   keyExtractor={(item) => item.id.toString()}
+    //   renderItem={({ item }) => (
+      <View>
+      {UpcomingLeavesData.map((item) => (
+        <View style={gridStyles.leaveItem} key={item.id}>
           <View style={gridStyles.row}>
             <ListItem
               title={`Date`}
@@ -61,8 +70,11 @@ function UpcomingLeavesTab() {
             <ListItem title={`Approved By`} subtitle={item.approvedBy} />
           </View>
         </View>
-      )}
-    />
+        
+      ))}
+      </View>
+    //   )}
+    // />
     //  </ScrollView>
   );
 }
@@ -88,19 +100,23 @@ const gridStyles = StyleSheet.create({
   },
   subtitle: {
     color: "black",
+    fontWeight:"bold",
   },
 
   approvedLabelText: {
-    color: "white",
-    backgroundColor: "blue",
+    color: "#63f0ee",
+    backgroundColor: "#d3f9f9",
     padding: 5,
-    borderRadius: 20,
+    borderRadius: 5,
     fontSize: 12,
+    
   },
 
   row: {
+    width:"90%",
     flexDirection: "row",
     justifyContent: "space-between",
+    
   },
   underLine: {
     borderBottomWidth: 1,

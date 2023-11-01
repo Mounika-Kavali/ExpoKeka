@@ -57,7 +57,7 @@ const LeavesAttendancePage = () => {
           style={{
             width: "100%",
             borderRadius: 20,
-            backgroundColor: "#d0ddfa",
+            backgroundColor: "white",
           }}
         >
           <View style={gridStyles.title}>
@@ -127,13 +127,13 @@ const LeavesAttendancePage = () => {
         style={{
           width: "100%",
           borderRadius: 20,
-          backgroundColor: "#d0ddfa",
+          backgroundColor: "#e2eafa",
           marginTop: 50,
         }}
         >
           <View
             style={{
-              height: 900,
+              
               marginTop: 20,
             }}
           >

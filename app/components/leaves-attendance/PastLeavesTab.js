@@ -26,7 +26,7 @@ function PastLeavesTab() {
 
   return (
     <FlatList
-      backgroundColor="#d0ddfa"
+      backgroundColor="#e2eafa"
       style={gridStyles.flatList}
       data={pastLeavesData}
       keyExtractor={(item) => item.id.toString()}
@@ -70,7 +70,7 @@ const gridStyles = StyleSheet.create({
     borderRadius: 20,
     marginVertical: 20,
     marginHorizontal: 20,
-    backgroundColor: "#ebebeb",
+    backgroundColor: "#fff8f8",
     borderWidth: 1,
     borderColor: "#8d8d8e",
   },
@@ -82,11 +82,12 @@ const gridStyles = StyleSheet.create({
     color: "white",
     backgroundColor: "#6bbdf2",
     padding: 5,
-    borderRadius: 20,
+    borderRadius: 5,
     fontSize: 12,
   },
 
   row: {
+    width:"100%",
     flexDirection: "row",
     justifyContent: "space-between",
   },
