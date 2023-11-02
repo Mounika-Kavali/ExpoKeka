@@ -48,7 +48,7 @@ const LeavesAttendancePage = () => {
 
   const navigation = useNavigation();
   const handleApplyLeave = () => {
-    navigation.navigate("FrontScreen");
+    navigation.navigate("ApplyLeave");
   };
   return (
     <SafeAreaView>

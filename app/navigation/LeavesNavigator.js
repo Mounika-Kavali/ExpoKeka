@@ -26,7 +26,7 @@ const LeavesTabs = () => {
           width: "70%",
           borderRadius: 15,
           backgroundColor: "#e3e3e4",//light gray
-        }}
+        }} 
         tabStyle={{
           backgroundColor: "#e3e3e4", //light gray
           borderWidth: 0,

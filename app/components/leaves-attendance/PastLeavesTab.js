@@ -25,13 +25,11 @@ function PastLeavesTab() {
   ];
 
   return (
-    <FlatList
-      backgroundColor="#e2eafa"
-      style={gridStyles.flatList}
-      data={pastLeavesData}
-      keyExtractor={(item) => item.id.toString()}
-      renderItem={({ item }) => (
-        <View style={gridStyles.leaveItem}>
+    <View>
+      {pastLeavesData.map((item) => (
+        <View style={gridStyles.leavesContainer} key={item.id}>
+        <View style={gridStyles.leavesItem} key={item.id}>
+          <View style={gridStyles.rowContainer}>
           <View style={gridStyles.row}>
             <ListItem
               title={`Date`}
@@ -43,6 +41,8 @@ function PastLeavesTab() {
               </View>
             ) : null}
           </View>
+          </View>
+          <View style={gridStyles.rowContainer}>
           <View style={gridStyles.underLine}></View>
           <View style={gridStyles.row}>
             <ListItem title={`Apply Days`} subtitle={item.applyDays} />
@@ -50,8 +50,11 @@ function PastLeavesTab() {
             <ListItem title={`Approved By`} subtitle={item.approvedBy} />
           </View>
         </View>
-      )}
-    />
+        </View>
+        </View>
+        
+      ))}
+      </View>
   );
 }
 
@@ -65,31 +68,39 @@ const ListItem = ({ title, subtitle }) => {
 };
 
 const gridStyles = StyleSheet.create({
-  leaveItem: {
+  leavesContainer:{
+    alignItems:"center",
+  },
+  leavesItem: {
+ 
+    width:"85%",
     padding: 16,
     borderRadius: 20,
     marginVertical: 20,
-    marginHorizontal: 20,
     backgroundColor: "#fff8f8",
     borderWidth: 1,
     borderColor: "#8d8d8e",
   },
+  rowContainer:{
+    width:"100%",
+  },
+  row: {
+    width:"100%",
+    flexDirection: "row",
+    flexWrap:"wrap",
+    justifyContent: "space-between",
+    
+  },
   subtitle: {
     color: "black",
+    fontWeight:"bold",
   },
-
   approvedLabelText: {
     color: "white",
     backgroundColor: "#6bbdf2",
     padding: 5,
     borderRadius: 5,
     fontSize: 12,
-  },
-
-  row: {
-    width:"100%",
-    flexDirection: "row",
-    justifyContent: "space-between",
   },
   underLine: {
     borderBottomWidth: 1,
