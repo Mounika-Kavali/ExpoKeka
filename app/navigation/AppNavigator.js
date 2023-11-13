@@ -3,8 +3,8 @@ import { NavigationContainer } from "@react-navigation/native";
 
 // Define your screens and navigator here
 import FrontScreen from "../screens/FrontScreen";
-import SignInScreen from '../screens/SignInScreen';
-import HomeScreen from '../screens/HomeScreen'
+import SignInScreen from "../screens/SignInScreen";
+import HomeScreen from "../screens/HomeScreen";
 import MyTabs from "./BottomTabNavigator";
 import applyLeave from "../components/leaves-attendance/ApplyLeave";
 

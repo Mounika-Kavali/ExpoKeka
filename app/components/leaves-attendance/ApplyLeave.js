@@ -1,159 +1,207 @@
-import React, { useState, useMemo } from 'react';
-import { View, Text, TextInput, ScrollView, Button, Switch } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
-import { Calendar } from 'react-native-calendars';
-import { format,isToday  } from 'date-fns';
+import React, { useState, useMemo } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  ScrollView,
+  Button,
+  Switch,
+  StyleSheet,
+} from "react-native";
+import { DatePicker } from "react-native-week-month-date-picker";
+import SelectDropdown from "react-native-select-dropdown";
+import { Dropdown } from "react-native-element-dropdown";
 
-function CustomCalendar(props) {
-    // Get the current date
-  const currentDate = new Date();
-  const currentYear = currentDate.getFullYear();
-  const currentMonth = currentDate.getMonth() + 1; // Month is 0-based, so add 1
-
-    // Create the initial date in the 'YYYY-MM-DD' format
-    const initDate = `${currentYear}-${currentMonth < 10 ? '0' : ''}${currentMonth}-01`;
-
-  const [range, setRange] = useState({});
-
-  // Using useMemo to perform calculations only if range is modified
-  const marked = useMemo(() => {
-    if (!range.startDate) return {};
-
-    let start = new Date(range.startDate).getTime();
-    let end = new Date(range.endDate || range.startDate).getTime();
-    let marked = {};
-
-    for (let cur = start; cur <= end; cur += 60 * 60 * 24000) {
-        let curDate = new Date(cur);
-      let curStr = new Date(cur).toISOString().substr(0, 10);
-      marked[curStr] = {
-        selected: true,
-        color: '#aabbee',
-        textColor: 'black',
-        startingDay: cur == start,
-        endingDay: cur == end,
-      };
-      if (isToday(curDate)) {
-        marked[curStr].dots = [{ key: 'today', color: 'red', selectedDotColor: 'red' }];
-      }
-    }
-    return marked;
-  }, [range]);
-
-  function handleDayPress(day) {
-    if (range.startDate && !range.endDate) {
-      // startDate is selected. Complete the range selection
-      let newRange = { ...range, ...{ endDate: day.dateString } };
-      props.onRangeSelected && props.onRangeSelected(newRange);
-      setRange(newRange);
-    } else {
-      // startDate isn't selected. Start the range selection
-      setRange({
-        startDate: day.dateString,
-      });
-    }
-  }
-
-  return (
-    <View>
-      <Calendar
-        initialDate={initDate}
-        markedDates={marked}
-        markingType="period"
-        onDayPress={handleDayPress}
-        {...props}
-      />
-    </View>
-  );
-}
+import { Picker } from "@react-native-picker/picker";
+import { Calendar } from "react-native-calendars";
+import { format, isToday, addDays } from "date-fns";
+import { FONTS, IMAGES, SIZES } from "../../constants/Assets";
 
 const ApplyLeave = () => {
-  const [fromDate, setFromDate] = useState(''); // Initialize fromDate state
-  const [toDate, setToDate] = useState(''); // Initialize toDate state
-  const [leaveType, setLeaveType] = useState('Vacation');
-  const [reason, setReason] = useState('');
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
+  const [leaveType, setLeaveType] = useState(null);
+  const [reason, setReason] = useState("");
   const [notifyManager, setNotifyManager] = useState(false);
+  const [isFocus, setIsFocus] = useState(false);
+
+  const minDate = new Date();
+  const [selectedDate, setSelectedDate] = React.useState(new Date());
 
   const type_of_leaves = [
-    'Bereavement leave',
-    "Comp off's",
-    'Earned leave',
-    'Marriage leave',
-    'Unpaid leave',
+    { label: "Bereavement leave", value: "bereavementLeave" },
+    { label: "Comp off's", value: "compOffsLeave" },
+    { label: "Earned leave", value: "earnedLeave" },
+    { label: "Marriage leave", value: "marriageLeave" },
+    { label: "Unpaid leave", value: "unpaidLeave" },
   ];
 
   const handleApplyLeave = () => {
-    console.log('Leave Applied');
+    console.log("Leave Applied");
   };
 
   return (
     <ScrollView>
+      <DatePicker
+        startDate={new Date()}
+        markedDates={[new Date(), new Date()]}
+        onDateChange={({ startDate, endDate }) => {
+          setFromDate(startDate);
+          setToDate(endDate);
+        }}
+        allowsPastDates={true}
+        translations={{
+          todayButtonText: "Today",
+        }}
+        theme={{
+          primaryColor: "purple",
+        }}
+      />
       <View style={{ margin: 20 }}>
-        <CustomCalendar
-          onRangeSelected={(range) => {
-            // Update the fromDate and toDate state based on the selected range
-            // Format and set the fromDate and toDate in the "DD-MM-YYYY" format
-            setFromDate(format(new Date(range.startDate), 'dd-MM-yyyy'));
-            setToDate(format(new Date(range.endDate || range.startDate), 'dd-MM-yyyy'));
-         }}
-        />
+        <View style={styles.labelInputContainer}>
+          <View style={styles.labelContainer}>
+            <Text>From Date</Text>
+          </View>
+          <View style={styles.inputContainer}>
+            <TextInput
+              value={fromDate}
+              style={{ fontSize: SIZES.p20 }}
+              readOnly={true}
+            />
+          </View>
+        </View>
 
-        <Text>From Date</Text>
-        <TextInput
-          value={fromDate}
-          style={{
-            borderWidth: 1,
-            borderColor: 'gray',
-            padding: 5,
-          }}
-          readOnly={true}
-        />
+        <View style={styles.labelInputContainer}>
+          <View style={styles.labelContainer}>
+            <Text>To Date</Text>
+          </View>
+          <View style={styles.inputContainer}>
+            <TextInput
+              value={toDate}
+              style={{ fontSize: SIZES.p20 }}
+              readOnly={true}
+            />
+          </View>
+        </View>
 
-        <Text>To Date</Text>
-        <TextInput
-          value={toDate}
-          style={{
-            borderWidth: 1,
-            borderColor: 'gray',
-            padding: 5,
-          }}
-          readOnly={true}
-        />
-
-        <Text>Select Type of Leave</Text>
-        <Picker
+        {/* <Picker
           selectedValue={leaveType}
           onValueChange={(itemValue) => setLeaveType(itemValue)}
           style={{
-            width: '100%',
-            backgroundColor: 'white',
+            width: "100%",
+            backgroundColor: "white",
             borderRadius: 60,
           }}
         >
           {type_of_leaves.map((typeIs) => (
             <Picker.Item key={typeIs} label={typeIs} value={typeIs} />
           ))}
-        </Picker>
+        </Picker> */}
+        {/* <SelectDropdown
+          data={type_of_leaves}
+        
+          onSelect={(selectedItem, index) => {
+            console.log(selectedItem, index);
+          }}
+          buttonTextAfterSelection={(selectedItem, index) => {
+            return selectedItem;
+          }}
+          rowTextForSelection={(item, index) => {
+            return item;
+          }}
+          dropdownStyle={{width:"60%",position:"absolute",backgroundColor:"pink",borderRadius:10,}}
+          rowTextStyle={{fontSize:14}}
+          buttonStyle={{width:"100%",backgroundColor:"white",}}
+          buttonTextStyle={{color:"red",textAlign:"left"}}
+        /> */}
 
-        <Text>Reason for Leave</Text>
-        <TextInput
-          multiline
-          numberOfLines={4}
-          value={reason}
-          onChangeText={(text) => setReason(text)}
-          style={{ borderWidth: 1, borderColor: 'gray', padding: 5 }}
-        />
+        <View style={styles.labelInputContainer}>
+          <View style={styles.labelContainer}>
+            <Text>Leave type</Text>
+          </View>
+          <View style={styles.inputContainer}>
+            <Dropdown
+              placeholderStyle={{ color: "gray" }}
+              selectedTextStyle={{ color: "coral" }}
+              data={type_of_leaves}
+              labelField="label"
+              valueField="value"
+              placeholder="Select Leave type"
+              value={leaveType}
+              onFocus={() => setIsFocus(true)}
+              onBlur={() => setIsFocus(false)}
+              onChange={(item) => {
+                setLeaveType(item.value);
+                setIsFocus(false);
+              }}
+            />
+          </View>
+        </View>
 
-        <Text>Notify to Manager</Text>
-        <Switch
-          value={notifyManager}
-          onValueChange={(value) => setNotifyManager(value)}
-        />
+        <View style={{ marginTop: 20 }}>
+          <Text>Reason for Leave</Text>
+          <TextInput
+            multiline
+            numberOfLines={4}
+            value={reason}
+            onChangeText={(text) => setReason(text)}
+            style={{
+              borderWidth: 1,
+              borderColor: "grey",
+              padding: 5,
+              borderRadius: 10,
+            }}
+          />
+        </View>
 
-        <Button title="Apply" onPress={handleApplyLeave} />
+        <View style={styles.labelInputContainer}>
+          <View style={styles.labelContainer}>
+            <Text>Notify to</Text>
+          </View>
+          <View style={styles.inputContainer}>
+            <Dropdown
+              placeholderStyle={{ color: "gray" }}
+              selectedTextStyle={{ color: "coral" }}
+              inputSearchStyle={{ color: "grey" }}
+              data={type_of_leaves}
+              search
+              labelField="label"
+              valueField="value"
+              placeholder={!isFocus ? "Reporting manager " : "..."}
+              searchPlaceholder="Search..."
+              value={notifyManager}
+              onFocus={() => setIsFocus(true)}
+              onBlur={() => setIsFocus(false)}
+              onChange={(item) => {
+                setNotifyManager(item.value);
+                setIsFocus(false);
+              }}
+            />
+          </View>
+        </View>
+        <View style={{ marginTop: 20 }}>
+          <Button title="Apply" onPress={handleApplyLeave} />
+        </View>
       </View>
     </ScrollView>
   );
 };
+
+const styles = StyleSheet.create({
+  labelInputContainer: {
+    marginTop: 20,
+    borderWidth: 1,
+    borderRadius: 20,
+    borderColor: "white",
+    backgroundColor: "white",
+  },
+  labelContainer: {
+    marginStart: 12,
+  },
+  inputContainer: {
+    paddingLeft: 12,
+    paddingBottom: 5,
+  },
+});
 
 export default ApplyLeave;
