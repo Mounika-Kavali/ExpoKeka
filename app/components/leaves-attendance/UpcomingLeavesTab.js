@@ -43,45 +43,38 @@ function UpcomingLeavesTab() {
   ];
 
   return (
-    // <ScrollView>
-    // <FlatList
-    //   backgroundColor="#e2eafa"
-    //   data={UpcomingLeavesData}
-    //   keyExtractor={(item) => item.id.toString()}
-    //   renderItem={({ item }) => (
-      <View>
+    <View>
       {UpcomingLeavesData.map((item) => (
         <View style={gridStyles.leavesContainer} key={item.id}>
-        <View style={gridStyles.leavesItem} key={item.id}>
-          <View style={gridStyles.rowContainer}>
-          <View style={gridStyles.row}>
-            <ListItem
-              title={`Date`}
-              subtitle={`${item.fromDate} - ${item.toDate}`}
-            />
-            {item.approved ? (
-              <View>
-                <Text style={gridStyles.approvedLabelText}>APPROVED</Text>
+          <View style={gridStyles.leavesItem} key={item.id}>
+            <View style={gridStyles.rowContainer}>
+              <View style={gridStyles.row}>
+                <ListItem
+                  title={`Date`}
+                  subtitle={`${item.fromDate} - ${item.toDate}`}
+                />
+                {item.approved ? (
+                  <View>
+                    <Text style={gridStyles.approvedLabelText}>APPROVED</Text>
+                  </View>
+                ) : null}
               </View>
-            ) : null}
-          </View>
-          </View>
-          <View style={gridStyles.rowContainer}>
-          <View style={gridStyles.underLine}></View>
-          <View style={gridStyles.row}>
-            <ListItem title={`Apply Days`} subtitle={item.applyDays} />
-            <ListItem title={`Leave Balance`} subtitle={item.leaveBalance} />
-            <ListItem title={`Approved By`} subtitle={item.approvedBy} />
+            </View>
+            <View style={gridStyles.rowContainer}>
+              <View style={gridStyles.underLine}></View>
+              <View style={gridStyles.row}>
+                <ListItem title={`Apply Days`} subtitle={item.applyDays} />
+                <ListItem
+                  title={`Leave Balance`}
+                  subtitle={item.leaveBalance}
+                />
+                <ListItem title={`Approved By`} subtitle={item.approvedBy} />
+              </View>
+            </View>
           </View>
         </View>
-        </View>
-        </View>
-        
       ))}
-      </View>
-    //   )}
-    // />
-    //  </ScrollView>
+    </View>
   );
 }
 
@@ -95,39 +88,37 @@ const ListItem = ({ title, subtitle }) => {
 };
 
 const gridStyles = StyleSheet.create({
-  leavesContainer:{
-    alignItems:"center",
+  leavesContainer: {
+    alignItems: "center",
   },
   leavesItem: {
-    width:"85%",
+    width: "88%",
     padding: 16,
     borderRadius: 20,
     marginVertical: 20,
     backgroundColor: "white",
     borderWidth: 1,
     borderColor: "#8d8d8e",
-   
   },
-  rowContainer:{
-    width:"100%",
+  rowContainer: {
+    width: "100%",
   },
   row: {
-    width:"100%",
+    width: "100%",
     flexDirection: "row",
-    flexWrap:"wrap",
+    flexWrap: "wrap",
     justifyContent: "space-between",
-    
   },
   subtitle: {
     color: "black",
-    fontWeight:"bold",
+    fontWeight: "bold",
   },
   approvedLabelText: {
     color: "#63f0ee",
     backgroundColor: "#d3f9f9",
     padding: 5,
     borderRadius: 5,
-    fontSize: 12, 
+    fontSize: 12,
   },
   underLine: {
     borderBottomWidth: 1,
