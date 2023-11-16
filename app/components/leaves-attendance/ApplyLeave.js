@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import styles from "../../styles";
+import axios from "axios";
 
 import { Calendar } from "react-native-calendars";
 import { format } from "date-fns";
@@ -27,6 +28,7 @@ const ApplyLeave = () => {
   const [range, setRange] = useState({});
 
   const [leaveDetails, setLeaveDetails] = useState({});
+  const [employeeNames, setEmployeeNames] = useState([]);
 
   const type_of_leaves = [
     { label: "Bereavement leave", value: "bereavementLeave" },
@@ -36,6 +38,39 @@ const ApplyLeave = () => {
     { label: "Unpaid leave", value: "unpaidLeave" },
   ];
 
+  useEffect(() => {
+    getEmployeeNames();
+  }, []);
+
+  const getEmployeeNames = async () => {
+    try {
+      const response = await fetch(
+        "https://af8e-183-82-124-166.ngrok.io/employe-details"
+      );
+
+      const json = await response.json();
+      // const employeeNames = json.map((employee) => ({ label: employee.emp_name }));
+      console.log(json, "employeeNames");
+      // setEmployeeNames(employeeNames);
+      return employeeNames;
+    } catch (error) {
+      console.error(error);
+    }
+
+    // axios
+    //   .get("https://af8e-183-82-124-166.ngrok.io/employe-details")
+    //   .then((response) => {
+    //     console.log("getting data from axios", response.data);
+    //     const json = response.data;
+    //     const employeeNames = json.map((employee) => ({
+    //       label: employee.emp_name,
+    //     }));
+    //     setEmployeeNames(employeeNames);
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
+  };
   const handleApplyLeave = () => {
     const leaveDetails = {
       fromDate,
@@ -52,7 +87,7 @@ const ApplyLeave = () => {
     const currentDate = new Date();
     const currentYear = currentDate.getFullYear();
     const currentMonth = currentDate.getMonth() + 1; // Month is 0-based, so add 1
-    const currentDay = currentDate.getDate(); // Get the current day
+    const minDateString = format(currentDate, "yyyy-MM-dd");
 
     // Create the initial date in the 'YYYY-MM-DD' format
     const initDate = `${currentYear}-${
@@ -91,11 +126,7 @@ const ApplyLeave = () => {
     }, [range.startDate, range.endDate, currentDate]);
 
     function handleDayPress(day) {
-      if (new Date(day.dateString) < currentDate) {
-        // Disable selecting past dates
-        props.onRangeSelected && props.onRangeSelected({});
-      }
-      else if (range.startDate && !range.endDate) {
+      if (range.startDate && !range.endDate) {
         let newRange = { ...range, ...{ endDate: day.dateString } };
         props.onRangeSelected && props.onRangeSelected(newRange);
         setRange(newRange);
@@ -109,14 +140,13 @@ const ApplyLeave = () => {
           startDate: day.dateString,
         });
       }
-      // Compare toDate and newStartDate
     }
 
     return (
       <View>
         <Calendar
           initialDate={initDate}
-          minDate={currentDate}
+          minDate={minDateString}
           firstDay={1} // week starts from monday
           markingType={"period"}
           markedDates={marked}
@@ -184,11 +214,8 @@ const ApplyLeave = () => {
               valueField="value"
               placeholder="Select Leave type"
               value={leaveType}
-              onFocus={() => setIsFocus(true)}
-              onBlur={() => setIsFocus(false)}
               onChange={(item) => {
                 setLeaveType(item.value);
-                setIsFocus(false);
               }}
             />
           </View>
@@ -220,17 +247,17 @@ const ApplyLeave = () => {
               placeholderStyle={{ color: "gray" }}
               selectedTextStyle={{ color: "#865be3" }}
               inputSearchStyle={{ color: "grey" }}
-              data={type_of_leaves}
+              data={employeeNames}
               search
               labelField="label"
-              valueField="value"
+              valueField="label"
               placeholder={!isFocus ? "Reporting manager " : "..."}
               searchPlaceholder="Search..."
               value={notifyManager}
               onFocus={() => setIsFocus(true)}
               onBlur={() => setIsFocus(false)}
               onChange={(item) => {
-                setNotifyManager(item.value);
+                setNotifyManager(item.label);
                 setIsFocus(false);
               }}
             />

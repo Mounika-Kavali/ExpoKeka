@@ -1,0 +1,77 @@
+{
+  "employe-details": [
+    {
+      "emp_Id": "S001",
+      "emp_name": "John Doe",
+      "emp_role": "Software Engineer",
+      "emp_dob": "1990-05-15",
+      "emp_ph": "123-456-7890",
+      "emp_email": "john@gmail.com",
+      "emp_gender": "Male",
+      "emp_experience": 5,
+      "emp_doj": "2018-08-29",
+      "address": "Balanagar,Hyderabad",
+      "marital_status": "Single"
+    },
+    {
+      "emp_Id": "S002",
+      "emp_name": "Jane Smith",
+      "emp_role": "UI/UX Designer",
+      "emp_dob": "1985-08-22",
+      "emp_ph": "987-654-3210",
+      "emp_gender": "Female",
+      "emp_experience": 8,
+      "emp_doj": "2018-08-29",
+      "address": "Balanagar,Hyderabad",
+      "marital_status": "Single"
+    },
+    {
+      "emp_Id": "S003",
+      "emp_name": "Bob Johnson",
+      "emp_role": "Senior Software Engineer",
+      "emp_dob": "1982-12-10",
+      "emp_ph": "555-123-4567",
+      "emp_gender": "Male",
+      "emp_experience": 12,
+      "emp_doj": "2018-08-29",
+      "address": "Balanagar,Hyderabad",
+      "marital_status": "Single"
+    },
+    {
+      "emp_Id": "S004",
+      "emp_name": "Alice Brown",
+      "emp_role": "Database Administrator",
+      "emp_dob": "1993-03-28",
+      "emp_ph": "333-999-7777",
+      "emp_gender": "Female",
+      "emp_experience": 6,
+      "emp_doj": "2014-08-29",
+      "address": "Sai nagar,Hyderabad",
+      "marital_status": "Single"
+    },
+    {
+      "emp_Id": "S005",
+      "emp_name": "Charlie Wilson",
+      "emp_role": "System Analyst",
+      "emp_dob": "1988-07-05",
+      "emp_ph": "777-888-2222",
+      "emp_gender": "Male",
+      "emp_experience": 9,
+      "emp_doj": "2016-07-29",
+      "address": "Vinayak nagar,Hyderabad",
+      "marital_status": "Married"
+    },
+    {
+      "emp_Id": "S006",
+      "emp_name": "Eva Davis",
+      "emp_role": "Software Developer",
+      "emp_dob": "1995-01-20",
+      "emp_ph": "111-222-3333",
+      "emp_gender": "Female",
+      "emp_experience": 3,
+      "emp_doj": "2018-08-29",
+      "address": "Madhapur,Hyderabad",
+      "marital_status": "Single"
+    }
+  ]
+}

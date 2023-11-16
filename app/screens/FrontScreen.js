@@ -20,7 +20,6 @@ import { ScrollView } from "react-native-gesture-handler";
 const FrontScreen = () => {
   const navigation = useNavigation();
   const [showSignIn, setShowSignIn] = useState(false);
-  const [marginTop, setMarginTop] = useState(SIZES.threeQuarters);
 
   const handleGetStarted = () => {
     // navigation.navigate("SignIn");
