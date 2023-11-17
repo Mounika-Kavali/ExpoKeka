@@ -45,13 +45,13 @@ const ApplyLeave = () => {
   const getEmployeeNames = async () => {
     try {
       const response = await fetch(
-        "https://af8e-183-82-124-166.ngrok.io/employe-details"
+        "https://8d34-183-82-124-166.ngrok.io/employe-details"
       );
 
       const json = await response.json();
-      // const employeeNames = json.map((employee) => ({ label: employee.emp_name }));
+      const employeeNames = json.map((employee) => ({ label: employee.emp_name }));
       console.log(json, "employeeNames");
-      // setEmployeeNames(employeeNames);
+      setEmployeeNames(employeeNames);
       return employeeNames;
     } catch (error) {
       console.error(error);
