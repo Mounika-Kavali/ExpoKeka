@@ -1,31 +1,19 @@
 import React, { useState } from "react";
-import {
-  View,
-  ImageBackground,
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  KeyboardAvoidingView,
-} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { View, ImageBackground, Text, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
 import { FONTS, IMAGES, SIZES } from "../constants/Assets";
 import styles from "../styles";
-import Colors from "../constants/Colors";
 import SignInPage from "../components/Sign-in-page";
-import FrontPage from "../components/FrontPage";
 import { ScrollView } from "react-native-gesture-handler";
 
 const LoginScreen = () => {
   const navigation = useNavigation();
-  const [showSignIn, setShowSignIn] = useState(false);
 
   return (
-    
     <View
       style={{
+        flex: 1,
         width: "100%",
         height: "100%",
         overflow: "hidden",
@@ -37,12 +25,15 @@ const LoginScreen = () => {
         style={{ height: "100%" }}
       >
         {/* OVERLAY VIEW */}
-        <ScrollView style={{ bottom: 0, position: "relative", width: "100%" }}>
-          <View
-            style={{
-              minHeight: 770,
-            }}
-          >
+        <ScrollView
+          style={{
+            flex: 1,
+            bottom: 0,
+            position: "absolute",
+            width: "100%",
+          }}
+        >
+          <View>
             <View
               style={{
                 marginTop: SIZES.threeQuarters,
@@ -60,24 +51,7 @@ const LoginScreen = () => {
                 borderTopLeftRadius={SIZES.p40}
                 borderTopRightRadius={SIZES.p40}
               >
-                {showSignIn ? (
-                  <View
-                    style={{
-                      flex: 1,
-                    }}
-                  >
-                    <SignInPage />
-                  </View>
-                ) : (
-                  <View
-                    style={{
-                      flex: 1,
-                    }}
-                  >
-                    <SignInPage />
-                    {/* <SignInPage /> */}
-                  </View>
-                )}
+                <SignInPage />
               </ImageBackground>
             </View>
           </View>

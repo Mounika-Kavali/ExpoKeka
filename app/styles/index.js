@@ -39,16 +39,10 @@ const styles = StyleSheet.create({
   },
 
   input: {
-    width: "100%",
-    height: 50,
-    marginVertical: 12,
-    padding: 10,
+    paddingTop: 10, // to display label text within the field
     fontSize: 18,
-    color: "white",
-    borderWidth: 1.2,
-    borderColor: "white",
-    borderRadius: 10,
   },
+
   btn: {
     borderWidth: 1.2,
     borderColor: "white",

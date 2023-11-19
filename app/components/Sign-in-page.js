@@ -3,11 +3,11 @@ import {
   View,
   ScrollView,
   Text,
-  TextInput,
   TouchableOpacity,
   Button,
   StyleSheet,
 } from "react-native";
+import { TextInput, IconButton } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import styles from "../styles";
@@ -18,23 +18,52 @@ const SignInPage = () => {
   const navigation = useNavigation();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [secureTextEntry, setSecureTextEntry] = useState(true);
+
+  const toggleSecureTextEntry = () => {
+    setSecureTextEntry(!secureTextEntry);
+  };
 
   const handleSignIn = async () => {
     const payload = {
       username: username,
       password: password,
     };
-    
+
     const { success, token, userId, error } = await loginApi(payload);
 
     if (success) {
       console.log("Login successful. Token:", token, "User:", userId);
-      const { success,  userId, error } = await employeeDetailsApi(2);
+      employeeDetailsApi(userId);
+      setErrorMessage("");
       navigation.navigate("Main");
     } else {
-      // Handle login failure, show error message to the user
       console.error("Login failed. Error:", error);
+      setErrorMessage(error);
     }
+  };
+
+
+  const onBlurUsername = () => {
+    if (username.trim() == "") {
+      setErrorMessage("Username is required");
+    } else {
+      setErrorMessage("");
+    }
+  };
+
+  const onBlurPassword = () => {
+    if (password.trim() == "") {
+      setErrorMessage("Password is required");
+    } else {
+      setErrorMessage("");
+    }
+  };
+
+  const isSignInDisabled = () => {
+    // Disable the sign-in button if there are validation errors
+    return username.trim() === "" || password.trim() === "";
   };
 
   return (
@@ -45,21 +74,51 @@ const SignInPage = () => {
           welcome back we missed you.
         </Text>
         <View style={{ width: "80%" }}>
+          {errorMessage ? (
+            <View style={{ alignItems: "flex-start" }}>
+              <Text style={{ color: "red", fontSize: 16, marginTop: 5 ,paddingLeft:10,}}>
+                {errorMessage}
+              </Text>
+            </View>
+          ) : (
+            ""
+          )}
           <TextInput
+            mode="outlined"
+            dense={true}
+            label={<Text style={{color:"#000"}}>  Username  </Text>}
             style={styles.input}
+            outlineColor={"#000"}
+            outlineStyle={{borderRadius: 20}}
+            activeOutlineColor={"#2963f1"}
             placeholder="Username"
-            placeholderTextColor="gray"
+            placeholderTextColor="#cdced0"
             onChangeText={setUsername}
             value={username}
+            onBlur={onBlurUsername}
           />
 
           <TextInput
-            style={styles.input}
+            mode="outlined"
+            dense={true}
+            label={<Text style={{color:"#000"}}>  Password  </Text>}
+            style={[styles.input,{marginTop:20,}]}
             placeholder="Password"
-            placeholderTextColor="gray"
-            secureTextEntry={true}
+            outlineColor={"#000"}
+            outlineStyle={{borderRadius: 20}}
+            activeOutlineColor={"#2963f1"}
+            placeholderTextColor="#cdced0"
+            secureTextEntry={secureTextEntry}
+            right={
+              <TextInput.Icon
+                iconColor="#7986e4"
+                icon={secureTextEntry ? "eye-off" : "eye"}
+                onPress={toggleSecureTextEntry}
+              />
+            }
             onChangeText={setPassword}
             value={password}
+            onBlur={onBlurPassword}
           />
         </View>
       </View>
@@ -68,7 +127,7 @@ const SignInPage = () => {
           <View style={{ alignItems: "flex-end" }}>
             <Text
               style={{
-                color: "blue",
+                color: "#79efe7",
                 marginBottom: SIZES.p15,
                 fontSize: SIZES.medium,
               }}
@@ -76,12 +135,12 @@ const SignInPage = () => {
               Forgot Password?
             </Text>
           </View>
-          <TouchableOpacity onPress={handleSignIn}>
+          <TouchableOpacity onPress={handleSignIn} disabled={isSignInDisabled()}>
             <LinearGradient
-              colors={[
-                "rgba(184, 71, 230, 1)",
-                "rgba(224, 34, 220, 1)",
-                "rgba(204, 55, 118, 1)",
+               colors={[
+                isSignInDisabled() ? "rgba(184, 71, 230, 0.5)" : "rgba(184, 71, 230, 1)",
+                isSignInDisabled() ? "rgba(224, 34, 220, 0.5)" : "rgba(224, 34, 220, 1)",
+                isSignInDisabled() ? "rgba(204, 55, 118, 0.5)" : "rgba(204, 55, 118, 1)",
               ]}
               start={{ x: 0.0, y: 1.0 }}
               end={{ x: 1.0, y: 1.0 }}
@@ -93,13 +152,20 @@ const SignInPage = () => {
                 borderRadius: 10,
               }}
             >
-              <Text style={[styles.buttonText,{fontSize:18,fontWeight:"bold"}]}>Sign In</Text>
+              <Text style={{ fontSize: 18 }}>Sign In</Text>
             </LinearGradient>
           </TouchableOpacity>
+
+          <Text
+            style={{ textAlign: "center", color: "#666", marginBottom: 30 }}
+          >
+            Or, login with ...
+          </Text>
         </View>
       </View>
     </View>
   );
 };
+
 
 export default SignInPage;

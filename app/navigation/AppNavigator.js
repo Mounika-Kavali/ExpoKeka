@@ -5,13 +5,18 @@ import { NavigationContainer } from "@react-navigation/native";
 import LoginScreen from "../screens/LoginScreen";
 import MyTabs from "./BottomTabNavigator";
 import applyLeave from "../components/leaves-attendance/ApplyLeave";
+import OnboardingScreen from "../screens/OnboardingScreen";
 
 const Stack = createStackNavigator();
 
 const AppNavigator = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
+      <Stack.Navigator
+        initialRouteName="Onboarding"
+        screenOptions={{ headerShown: false }}
+      >
+        <Stack.Screen name="Onboarding" component={OnboardingScreen} />
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Main" component={MyTabs} />
         <Stack.Screen name="ApplyLeave" component={applyLeave} />
