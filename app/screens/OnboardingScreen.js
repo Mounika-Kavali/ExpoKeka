@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   ImageBackground,
@@ -24,9 +24,12 @@ import SwipeButton from "../components/SwipeButton";
 
 const OnboardingScreen = () => {
   const navigation = useNavigation();
+  useEffect(() => {
+    console.log("useEffect in onboarding");
+  });
 
   const handleGetStarted = () => {
-    console.log("handleGetStarted")
+    console.log("handleGetStarted");
     navigation.navigate("Login");
   };
   return (
@@ -58,13 +61,7 @@ const OnboardingScreen = () => {
               width: "100%",
             }}
           >
-            <View
-              style={{
-                marginTop: SIZES.threeQuarters,
-                borderTopLeftRadius: SIZES.p40,
-                borderTopRightRadius: SIZES.p40,
-              }}
-            >
+            <View>
               <ImageBackground
                 source={IMAGES.mainScreen}
                 style={{
@@ -94,7 +91,6 @@ const OnboardingScreen = () => {
                     }}
                   >
                     <SwipeButton onToggle={handleGetStarted} />
-                    
                   </View>
                 </View>
               </ImageBackground>

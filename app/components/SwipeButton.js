@@ -28,10 +28,6 @@ const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient);
 
 const SwipeButton = ({ onToggle }) => {
   // Reset state when the component mounts
-  useEffect(() => {
-    setToggled(false);
-    X.value = 0;
-  }, []);
 
   // Animated value for X translation
   const X = useSharedValue(0);
@@ -40,10 +36,13 @@ const SwipeButton = ({ onToggle }) => {
 
   // Fires when animation ends
   const handleComplete = (isToggled) => {
-    if (isToggled !== toggled) {
+    if (isToggled == toggled) {
       setToggled(isToggled);
       onToggle(isToggled);
     }
+  };
+  const handleActive = (isToggled) => {
+    setToggled(isToggled);
   };
 
   // Gesture Handler Events
@@ -61,6 +60,7 @@ const SwipeButton = ({ onToggle }) => {
 
       if (newValue >= 0 && newValue <= H_SWIPE_RANGE) {
         X.value = newValue;
+        runOnJS(handleActive)(true);
       }
     },
     onEnd: () => {
@@ -140,6 +140,7 @@ const SwipeButton = ({ onToggle }) => {
         </Animated.View>
       </PanGestureHandler>
       <Animated.Text style={[styles.swipeText, AnimatedStyles.swipeText]}>
+        {console.log(toggled, "toggled")}
         {toggled ? "GET STARTED" : "SWIPE ME"}
       </Animated.Text>
     </Animated.View>

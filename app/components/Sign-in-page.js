@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   View,
   ScrollView,
@@ -13,6 +13,8 @@ import { LinearGradient } from "expo-linear-gradient";
 import styles from "../styles";
 import { FONTS, IMAGES, SIZES } from "../constants/Assets";
 import { employeeDetailsApi, loginApi } from "../utils/LoginApi";
+import { ActivityIndicator, Colors } from "react-native-paper";
+import BiometricAuth from "./BiometricAuth";
 
 const SignInPage = () => {
   const navigation = useNavigation();
@@ -20,6 +22,7 @@ const SignInPage = () => {
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [secureTextEntry, setSecureTextEntry] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const toggleSecureTextEntry = () => {
     setSecureTextEntry(!secureTextEntry);
@@ -30,20 +33,22 @@ const SignInPage = () => {
       username: username,
       password: password,
     };
-
+    setLoading(true); // Set loading state to true when API call starts
     const { success, token, userId, error } = await loginApi(payload);
 
     if (success) {
       console.log("Login successful. Token:", token, "User:", userId);
       employeeDetailsApi(userId);
+      setLoading(false);
+
       setErrorMessage("");
       navigation.navigate("Main");
     } else {
       console.error("Login failed. Error:", error);
       setErrorMessage(error);
+      setLoading(false);
     }
   };
-
 
   const onBlurUsername = () => {
     if (username.trim() == "") {
@@ -65,7 +70,7 @@ const SignInPage = () => {
     // Disable the sign-in button if there are validation errors
     return username.trim() === "" || password.trim() === "";
   };
-
+  const passwordInputRef = useRef(null);
   return (
     <View style={{ flex: 1, paddingVertical: SIZES.p30 }}>
       <View style={{ alignItems: "center" }}>
@@ -76,7 +81,14 @@ const SignInPage = () => {
         <View style={{ width: "80%" }}>
           {errorMessage ? (
             <View style={{ alignItems: "flex-start" }}>
-              <Text style={{ color: "red", fontSize: 16, marginTop: 5 ,paddingLeft:10,}}>
+              <Text
+                style={{
+                  color: "red",
+                  fontSize: 16,
+                  marginTop: 5,
+                  paddingLeft: 10,
+                }}
+              >
                 {errorMessage}
               </Text>
             </View>
@@ -86,10 +98,10 @@ const SignInPage = () => {
           <TextInput
             mode="outlined"
             dense={true}
-            label={<Text style={{color:"#000"}}>  Username  </Text>}
+            label={<Text style={{ color: "#000" }}> Username </Text>}
             style={styles.input}
             outlineColor={"#000"}
-            outlineStyle={{borderRadius: 20}}
+            outlineStyle={{ borderRadius: 20 }}
             activeOutlineColor={"#2963f1"}
             placeholder="Username"
             placeholderTextColor="#cdced0"
@@ -101,19 +113,29 @@ const SignInPage = () => {
           <TextInput
             mode="outlined"
             dense={true}
-            label={<Text style={{color:"#000"}}>  Password  </Text>}
-            style={[styles.input,{marginTop:20,}]}
+            label={<Text style={{ color: "#000" }}> Password </Text>}
+            style={[styles.input]}
             placeholder="Password"
             outlineColor={"#000"}
-            outlineStyle={{borderRadius: 20}}
+            outlineStyle={{ borderRadius: 20 }}
             activeOutlineColor={"#2963f1"}
             placeholderTextColor="#cdced0"
             secureTextEntry={secureTextEntry}
+            ref={passwordInputRef}
             right={
               <TextInput.Icon
                 iconColor="#7986e4"
                 icon={secureTextEntry ? "eye-off" : "eye"}
-                onPress={toggleSecureTextEntry}
+                onPress={() => {
+                  toggleSecureTextEntry();
+                  // Blur the TextInput when icon is clicked
+                  if (
+                    secureTextEntry ||
+                    (!secureTextEntry && passwordInputRef.current)
+                  ) {
+                    passwordInputRef.current.blur();
+                  }
+                }}
               />
             }
             onChangeText={setPassword}
@@ -135,12 +157,22 @@ const SignInPage = () => {
               Forgot Password?
             </Text>
           </View>
-          <TouchableOpacity onPress={handleSignIn} disabled={isSignInDisabled()}>
+
+          <TouchableOpacity
+            onPress={handleSignIn}
+            disabled={isSignInDisabled()}
+          >
             <LinearGradient
-               colors={[
-                isSignInDisabled() ? "rgba(184, 71, 230, 0.5)" : "rgba(184, 71, 230, 1)",
-                isSignInDisabled() ? "rgba(224, 34, 220, 0.5)" : "rgba(224, 34, 220, 1)",
-                isSignInDisabled() ? "rgba(204, 55, 118, 0.5)" : "rgba(204, 55, 118, 1)",
+              colors={[
+                isSignInDisabled()
+                  ? "rgba(184, 71, 230, 0.5)"
+                  : "rgba(184, 71, 230, 1)",
+                isSignInDisabled()
+                  ? "rgba(224, 34, 220, 0.5)"
+                  : "rgba(224, 34, 220, 1)",
+                isSignInDisabled()
+                  ? "rgba(204, 55, 118, 0.5)"
+                  : "rgba(204, 55, 118, 1)",
               ]}
               start={{ x: 0.0, y: 1.0 }}
               end={{ x: 1.0, y: 1.0 }}
@@ -152,15 +184,27 @@ const SignInPage = () => {
                 borderRadius: 10,
               }}
             >
-              <Text style={{ fontSize: 18 }}>Sign In</Text>
+              <View style={{ flexDirection: "row" }}>
+                {loading && (
+                  <ActivityIndicator
+                    animating={true}
+                    size="small"
+                    color={"#358"}
+                  />
+                )}
+                <Text style={{ fontSize: 18, paddingHorizontal: 10 }}>
+                  Sign In
+                </Text>
+              </View>
             </LinearGradient>
           </TouchableOpacity>
 
           <Text
-            style={{ textAlign: "center", color: "#666", marginBottom: 30 }}
+            style={{ textAlign: "center", color: "#666", marginVertical: 20 }}
           >
             Or, login with ...
           </Text>
+          <BiometricAuth />
         </View>
       </View>
     </View>

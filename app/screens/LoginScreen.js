@@ -34,13 +34,7 @@ const LoginScreen = () => {
           }}
         >
           <View>
-            <View
-              style={{
-                marginTop: SIZES.threeQuarters,
-                borderTopLeftRadius: SIZES.p40,
-                borderTopRightRadius: SIZES.p40,
-              }}
-            >
+            <View>
               <ImageBackground
                 source={IMAGES.mainScreen}
                 style={{
