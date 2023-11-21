@@ -1,23 +1,25 @@
-import React, { useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import {
   View,
   ScrollView,
   Text,
   TouchableOpacity,
-  Button,
   StyleSheet,
 } from "react-native";
-import { TextInput, IconButton } from "react-native-paper";
+import { TextInput } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import styles from "../styles";
 import { FONTS, IMAGES, SIZES } from "../constants/Assets";
 import { employeeDetailsApi, loginApi } from "../utils/LoginApi";
-import { ActivityIndicator, Colors } from "react-native-paper";
 import BiometricAuth from "./BiometricAuth";
+import LoadingSpinner from "./LoadingSpinner";
+import { AppDispatchContext } from "../utils/AppContext";
 
 const SignInPage = () => {
   const navigation = useNavigation();
+  const dispatch = useContext(AppDispatchContext);
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -36,9 +38,10 @@ const SignInPage = () => {
     setLoading(true); // Set loading state to true when API call starts
     const { success, token, userId, error } = await loginApi(payload);
 
+
     if (success) {
       console.log("Login successful. Token:", token, "User:", userId);
-      employeeDetailsApi(userId);
+      await employeeDetailsApi({empId:userId ,dispatch});
       setLoading(false);
 
       setErrorMessage("");
@@ -75,7 +78,7 @@ const SignInPage = () => {
     <View style={{ flex: 1, paddingVertical: SIZES.p30 }}>
       <View style={{ alignItems: "center" }}>
         <Text style={styles.h2}>Welcome Back!</Text>
-        <Text style={[styles.p, { color: "pink" }]}>
+        <Text style={[styles.p, { color: "pink", marginBottom: 10, }]}>
           welcome back we missed you.
         </Text>
         <View style={{ width: "80%" }}>
@@ -114,7 +117,7 @@ const SignInPage = () => {
             mode="outlined"
             dense={true}
             label={<Text style={{ color: "#000" }}> Password </Text>}
-            style={[styles.input]}
+            style={[styles.input,{ marginTop: 20,}]}
             placeholder="Password"
             outlineColor={"#000"}
             outlineStyle={{ borderRadius: 20 }}
@@ -185,13 +188,7 @@ const SignInPage = () => {
               }}
             >
               <View style={{ flexDirection: "row" }}>
-                {loading && (
-                  <ActivityIndicator
-                    animating={true}
-                    size="small"
-                    color={"#358"}
-                  />
-                )}
+                {loading && <LoadingSpinner visible={loading}/>}
                 <Text style={{ fontSize: 18, paddingHorizontal: 10 }}>
                   Sign In
                 </Text>

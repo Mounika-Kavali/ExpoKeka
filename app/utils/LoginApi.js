@@ -1,10 +1,11 @@
+import { useContext } from "react";
 import axios from "axios";
-
-const BASE_URL = "https://udaykiran1508.pythonanywhere.com/api/";
+import { EMPLOYEE_DETAILS_API, LOGIN_API } from "../environment.development";
 
 const loginApi = async (payload) => {
   try {
-    const response = await axios.post(`${BASE_URL}login/`, payload);
+    const response = await axios.post(`${LOGIN_API}`, payload);
+    console.log("LOGIN API called");
     const { token, userId } = response.data;
 
     return { success: true, token, userId };
@@ -13,16 +14,21 @@ const loginApi = async (payload) => {
     return { success: false, error: "Login failed. Please try again." };
   }
 };
-const employeeDetailsApi = async (empId) => {
+const employeeDetailsApi = async ({ empId, dispatch }) => {
   try {
-    const response = await axios.get(`${BASE_URL}employee-details/${empId}/`);
+    const response = await axios.get(`${EMPLOYEE_DETAILS_API}${empId}/`);
     const emp_details = response.data;
-    console.log("emp_details",emp_details)
-    return { success: true};
+
+    // Dispatch action to update context
+    dispatch({ type: "SET_EMP_DETAILS", payload: emp_details });
+    return { success: true, emp_details };
   } catch (error) {
-    console.error("Login API error:", error);
-    return { success: false, error: "Login failed. Please try again." };
+    console.error("Employee details fetching error:", error);
+    return {
+      success: false,
+      error: "Emp details fetching failed. Please try again.",
+    };
   }
 };
 
-export { loginApi,employeeDetailsApi };
+export { loginApi, employeeDetailsApi };

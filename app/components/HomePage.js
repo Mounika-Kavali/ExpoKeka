@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Children, useContext, useEffect, useState } from "react";
 import {
   FlatList,
   View,
@@ -8,65 +8,30 @@ import {
   ImageBackground,
 } from "react-native";
 import { FONTS, IMAGES, SIZES } from "../constants/Assets";
+import ListItem from "./ListItem";
+import { AppContext, useAppContext } from "../utils/AppContext";
 
 const HomePage = () => {
-  const [employeeDetails, setEmployeeDetails] = useState([]);
-  useEffect(() => {
-    // fetchEmployeeDetails();
-  }, []);
+  const state = useContext(AppContext);
+  const empDetails = state.empDetails;
 
-  const fetchEmployeeDetails = async () => {
-    try {
-      // Fetch employee details from your API endpoint
-      const response = await fetch("YOUR_API_ENDPOINT");
-      const data = await response.json();
-
-      // Assuming data structure is an array of objects with label and value
-      setEmployeeDetails(data);
-    } catch (error) {
-      console.error("Error fetching employee details:", error);
-    }
+  const empLabels = {
+    employeeId: "Employee ID",
+    employeeName: "Name",
+    email: "Email",
+    gender: "Gender",
+    dateOfBirth: "DOB",
+    employeeRole: "Role",
+    employeePhone: "Mobile No",
+    experience: "Experience",
+    employeeDateOfJoin: "Date of Joining",
+    nationality: "Nationaliy",
+    martialStatus: "Martial Status",
+    address: "Address",
   };
-  const exampleEmployeeDetails = [
-    { label: "Employee ID", value: "00321" },
-    { label: "Email", value: "john123@gmail.com" },
-    { label: "Gender", value: "Male" },
-    { label: "DOB", value: "Dec 12 1993" },
-    { label: "Martial status", value: "Single" },
-  ];
 
-  const renderDetailItem = ({ item }) => (
-    <View
-      style={{
-        width: "100%",
-        borderBottomWidth: 0.6,
-        borderBottomColor: "#a7a7a7",
-        justifyContent: "space-between",
-        flexDirection: "row",
-        paddingBottom: 10,
-        marginBottom: 15,
-      }}
-    >
-      <Text
-        style={{ width: "40%", fontWeight: "600", fontSize: 18, color: "#000" }}
-      >
-        {item.label}
-      </Text>
-      <Text
-        style={{
-          width: "55%",
-          textAlign: "right",
-          fontWeight: "400",
-          fontSize: 16,
-          color: "#3e2e7e",
-        }}
-      >
-        {item.value}
-      </Text>
-    </View>
-  );
   return (
-    <View>
+    <ScrollView>
       <View
         style={{
           width: "100%",
@@ -114,25 +79,24 @@ const HomePage = () => {
           {/* PROFILE IMG CIRCLE */}
           <View
             style={{
-              height:"70%", // to display circle not in middle of overlay view
+              height: "70%", // to display circle not in middle of overlay view
               justifyContent: "center",
               alignItems: "center",
             }}
           >
-            <View  style={{
-              width:"40%",
-              height: 150,
-              borderRadius:100,
-              backgroundColor:"pink",
-              borderWidth:1,
-              borderColor:"#fff"
-            }}>
-
-            </View>
+            <View
+              style={{
+                width: "40%",
+                height: 150,
+                borderRadius: 100,
+                backgroundColor: "pink",
+                borderWidth: 1,
+                borderColor: "#fff",
+              }}
+            ></View>
           </View>
         </ImageBackground>
       </View>
-
       {/* DETAILS */}
       {/* <View style={{ marginHorizontal: 30, marginTop: 50 }}>
         <View
@@ -151,15 +115,22 @@ const HomePage = () => {
         </View>
 
       </View> */}
-      <FlatList
-        data={
-          employeeDetails.length > 0 ? employeeDetails : exampleEmployeeDetails
-        }
-        renderItem={renderDetailItem}
-        keyExtractor={(item) => item.label}
-        style={{ marginHorizontal: 30, marginTop: 50 }}
-      />
-    </View>
+      <View style={{ marginHorizontal: 30, marginTop: 50 }}>
+        {Object.entries(empDetails).map((item, index) => {
+          if (item[0] !== "user") {
+            return (
+              <ListItem
+                key={index}
+                label={empLabels[item[0]]}
+                value={item[1]}
+              />
+            );
+          } else {
+            return null;
+          }
+        })}
+      </View>
+    </ScrollView>
   );
 };
 
