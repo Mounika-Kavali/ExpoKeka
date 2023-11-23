@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef } from "react";
+import React, { useState, useEffect, useMemo, useRef, useContext } from "react";
 import {
   View,
   Text,
@@ -17,70 +17,56 @@ import { Calendar } from "react-native-calendars";
 import { format } from "date-fns";
 import { FONTS, IMAGES, SIZES } from "../../constants/Assets";
 import LeaveDetailsModal from "../../modals/BottomModals";
+import { AppContext, AppDispatchContext } from "../../utils/AppContext";
+import { EmployeesByPositionApi, applyLeaveApi } from "../../utils/LeavesApi";
+import { employeeDetailsApi } from "../../utils/ProfileApi";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const ApplyLeave = () => {
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
   const [leaveType, setLeaveType] = useState(null);
   const [reason, setReason] = useState("");
-  const [notifyManager, setNotifyManager] = useState(false);
+  const [notifyManager, setNotifyManager] = useState(20236);
   const [isFocus, setIsFocus] = useState(false);
   const [range, setRange] = useState({});
 
   const [leaveDetails, setLeaveDetails] = useState({});
   const [employeeNames, setEmployeeNames] = useState([]);
+  const [curMonth, setCurMonth] = useState("");
+
+  const dispatch = useContext(AppDispatchContext);
+  const state = useContext(AppContext);
+  const empId = state.empId;
 
   const type_of_leaves = [
-    { label: "Bereavement leave", value: "bereavementLeave" },
-    { label: "Comp off's", value: "compOffsLeave" },
-    { label: "Earned leave", value: "earnedLeave" },
-    { label: "Marriage leave", value: "marriageLeave" },
-    { label: "Unpaid leave", value: "unpaidLeave" },
+    { label: "Medical leave", value: "sick" },
+    { label: "Casual Leave", value: "casual" },
+    { label: "Unpaid leave", value: "unpaid" },
   ];
 
   useEffect(() => {
-    getEmployeeNames();
+    setCurMonth(new Date());
+    // getNotifyEmployeeNames();
   }, []);
 
-  const getEmployeeNames = async () => {
-    try {
-      const response = await fetch(
-        "https://8d34-183-82-124-166.ngrok.io/employe-details"
-      );
-
-      const json = await response.json();
-      const employeeNames = json.map((employee) => ({ label: employee.emp_name }));
-      console.log(json, "employeeNames");
-      setEmployeeNames(employeeNames);
-      return employeeNames;
-    } catch (error) {
-      console.error(error);
-    }
-
-    // axios
-    //   .get("https://af8e-183-82-124-166.ngrok.io/employe-details")
-    //   .then((response) => {
-    //     console.log("getting data from axios", response.data);
-    //     const json = response.data;
-    //     const employeeNames = json.map((employee) => ({
-    //       label: employee.emp_name,
-    //     }));
-    //     setEmployeeNames(employeeNames);
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
+  const getNotifyEmployeeNames = async () => {
+    const position = "Manager";
+    await EmployeesByPositionApi({ pos: position });
   };
-  const handleApplyLeave = () => {
+  const handleApplyLeave = async () => {
     const leaveDetails = {
-      fromDate,
-      toDate,
-      leaveType,
-      notifyManager,
-      reason,
+      from_date: fromDate,
+      to_date: toDate,
+      leave_type: leaveType,
+      notify: notifyManager,
+      reason: reason,
+      status: "PENDING",
+      employee: empId,
     };
     setLeaveDetails(leaveDetails);
-    console.log(leaveDetails, "Leave Applied");
+    await applyLeaveApi({ leaveDetails });
+    employeeDetailsApi({ empId, dispatch });
   };
 
   function CustomCalendar(props) {
@@ -131,23 +117,27 @@ const ApplyLeave = () => {
         props.onRangeSelected && props.onRangeSelected(newRange);
         setRange(newRange);
         if (newRange.endDate > newRange.startDate) {
-          setFromDate(format(new Date(range.startDate), "dd-MM-yyyy"));
-          setToDate(format(new Date(day.dateString), "dd-MM-yyyy"));
+          setFromDate(format(new Date(range.startDate), "yyyy-MM-dd"));
+          setToDate(format(new Date(day.dateString), "yyyy-MM-dd"));
         }
       } else {
         // startDate isn't selected. Start the range selection
         setRange({
           startDate: day.dateString,
         });
+        // Update the current month when a day is pressed
+        setCurMonth(new Date(day.dateString));
       }
     }
 
     return (
       <View>
         <Calendar
-          initialDate={initDate}
+          // initialDate={initDate}
           minDate={minDateString}
           firstDay={1} // week starts from monday
+          current={curMonth}
+          key={curMonth}
           markingType={"period"}
           markedDates={marked}
           disableAllTouchEventsForDisabledDays={true}
@@ -171,113 +161,123 @@ const ApplyLeave = () => {
   }
 
   return (
-    <ScrollView>
-      <View style={{ margin: 20 }}>
-        <CustomCalendar />
+    <SafeAreaView>
+      <ScrollView>
+        <View style={{ margin: 20 }}>
+          <CustomCalendar />
 
-        <View style={leaveApplyStyles.labelInputContainer}>
-          <View style={leaveApplyStyles.labelContainer}>
-            <Text>From Date</Text>
-          </View>
-          <View style={leaveApplyStyles.inputContainer}>
-            <TextInput
-              value={fromDate}
-              style={{ fontSize: SIZES.p15 }}
-              readOnly={true}
-            />
-          </View>
-        </View>
+          {toDate ? (
+            <>
+              <View style={leaveApplyStyles.labelInputContainer}>
+                <View style={leaveApplyStyles.labelContainer}>
+                  <Text>From Date</Text>
+                </View>
+                <View style={leaveApplyStyles.inputContainer}>
+                  <TextInput
+                    value={fromDate}
+                    style={{ fontSize: SIZES.p15 }}
+                    readOnly={true}
+                  />
+                </View>
+              </View>
 
-        <View style={leaveApplyStyles.labelInputContainer}>
-          <View style={leaveApplyStyles.labelContainer}>
-            <Text>To Date</Text>
-          </View>
-          <View style={leaveApplyStyles.inputContainer}>
-            <TextInput
-              value={toDate}
-              style={{ fontSize: SIZES.p15 }}
-              readOnly={true}
-            />
-          </View>
-        </View>
-
-        <View style={leaveApplyStyles.labelInputContainer}>
-          <View style={leaveApplyStyles.labelContainer}>
-            <Text>Leave type</Text>
-          </View>
-          <View style={leaveApplyStyles.inputContainer}>
-            <Dropdown
-              placeholderStyle={{ color: "gray" }}
-              selectedTextStyle={{ color: "#865be3" }}
-              data={type_of_leaves}
-              labelField="label"
-              valueField="value"
-              placeholder="Select Leave type"
-              value={leaveType}
-              onChange={(item) => {
-                setLeaveType(item.value);
-              }}
-            />
-          </View>
-        </View>
-
-        <View style={{ marginTop: 20 }}>
-          <Text>Reason for Leave</Text>
-          <TextInput
-            multiline
-            numberOfLines={4}
-            value={reason}
-            onChangeText={(text) => setReason(text)}
-            style={{
-              borderWidth: 1,
-              borderColor: "grey",
-              padding: 5,
-              borderRadius: 10,
-              color: "#865be3",
-            }}
-          />
-        </View>
-
-        <View style={leaveApplyStyles.labelInputContainer}>
-          <View style={leaveApplyStyles.labelContainer}>
-            <Text>Notify to</Text>
-          </View>
-          <View style={leaveApplyStyles.inputContainer}>
-            <Dropdown
-              placeholderStyle={{ color: "gray" }}
-              selectedTextStyle={{ color: "#865be3" }}
-              inputSearchStyle={{ color: "grey" }}
-              data={employeeNames}
-              search
-              labelField="label"
-              valueField="label"
-              placeholder={!isFocus ? "Reporting manager " : "..."}
-              searchPlaceholder="Search..."
-              value={notifyManager}
-              onFocus={() => setIsFocus(true)}
-              onBlur={() => setIsFocus(false)}
-              onChange={(item) => {
-                setNotifyManager(item.label);
-                setIsFocus(false);
-              }}
-            />
-          </View>
-        </View>
-        <View style={{ marginTop: 20, marginHorizontal: 80 }}>
-          {/* <Button title="Apply" onPress={handleApplyLeave} /> */}
-          <TouchableOpacity onPress={handleApplyLeave}>
-            <Text
-              style={[
-                styles.btn,
-                { textAlign: "center", paddingVertical: 10, fontSize: 16 },
-              ]}
-            >
-              Apply
+              <View style={leaveApplyStyles.labelInputContainer}>
+                <View style={leaveApplyStyles.labelContainer}>
+                  <Text>To Date</Text>
+                </View>
+                <View style={leaveApplyStyles.inputContainer}>
+                  <TextInput
+                    value={toDate}
+                    style={{ fontSize: SIZES.p15 }}
+                    readOnly={true}
+                  />
+                </View>
+              </View>
+            </>
+          ) : (
+            <Text style={{ fontSize: 10, fontWeight: "bold" }}>
+              Please select the From Date & To Date in above calendar!
             </Text>
-          </TouchableOpacity>
+          )}
+
+          <View style={leaveApplyStyles.labelInputContainer}>
+            <View style={leaveApplyStyles.labelContainer}>
+              <Text>Leave type</Text>
+            </View>
+            <View style={leaveApplyStyles.inputContainer}>
+              <Dropdown
+                placeholderStyle={{ color: "gray" }}
+                selectedTextStyle={{ color: "#865be3" }}
+                data={type_of_leaves}
+                labelField="label"
+                valueField="value"
+                placeholder="Select Leave type"
+                value={leaveType}
+                onChange={(item) => {
+                  setLeaveType(item.value);
+                }}
+              />
+            </View>
+          </View>
+
+          <View style={{ marginTop: 20 }}>
+            <Text>Reason for Leave</Text>
+            <TextInput
+              multiline
+              numberOfLines={4}
+              value={reason}
+              onChangeText={(text) => setReason(text)}
+              style={{
+                borderWidth: 1,
+                borderColor: "grey",
+                padding: 5,
+                borderRadius: 10,
+                color: "#865be3",
+              }}
+            />
+          </View>
+
+          <View style={leaveApplyStyles.labelInputContainer}>
+            <View style={leaveApplyStyles.labelContainer}>
+              <Text>Notify to</Text>
+            </View>
+            <View style={leaveApplyStyles.inputContainer}>
+              <Dropdown
+                placeholderStyle={{ color: "gray" }}
+                selectedTextStyle={{ color: "#865be3" }}
+                inputSearchStyle={{ color: "grey" }}
+                data={employeeNames}
+                search
+                labelField="label"
+                valueField="label"
+                placeholder={!isFocus ? "Reporting manager " : "..."}
+                searchPlaceholder="Search..."
+                value={notifyManager}
+                onFocus={() => setIsFocus(true)}
+                onBlur={() => setIsFocus(false)}
+                onChange={(item) => {
+                  setNotifyManager(item.label);
+                  setIsFocus(false);
+                }}
+              />
+            </View>
+          </View>
+          <View style={{ marginTop: 20, marginHorizontal: 80 }}>
+            {/* <Button title="Apply" onPress={handleApplyLeave} /> */}
+            <TouchableOpacity onPress={handleApplyLeave}>
+              <Text
+                style={[
+                  styles.btn,
+                  { textAlign: "center", paddingVertical: 10, fontSize: 16 },
+                ]}
+              >
+                Apply
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 

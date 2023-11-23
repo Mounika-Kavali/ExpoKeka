@@ -6,6 +6,7 @@ import {IMAGES} from '../constants/Assets'
 import HomeScreen from '../screens/HomeScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import LeavesAttendanceScreen from '../screens/LeavesAttendanceScreen';
+import ChatScreen from '../screens/ChatScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -60,7 +61,7 @@ const  MyTabs=()=> {
       />
       <Tab.Screen
         name="Chat"
-        component={ProfileScreen}
+        component={ChatScreen}
         options={{
           tabBarLabel: '',
           tabBarIcon: ({ color, size }) => (

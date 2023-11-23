@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -11,8 +11,29 @@ import styles from "../../styles";
 import { useNavigation } from "@react-navigation/native";
 import { FONTS, IMAGES, SIZES } from "../../constants/Assets";
 import LeavesTabs from "../../navigation/LeavesNavigator";
+import { AppContext, AppDispatchContext } from "../../utils/AppContext";
+import {
+  EmployeesByPositionApi,
+  leavesSummaryApi,
+} from "../../utils/LeavesApi";
 
 const LeavesAttendancePage = () => {
+  const navigation = useNavigation();
+  const dispatch = useContext(AppDispatchContext);
+  const state = useContext(AppContext);
+  const empId = state.empId;
+
+  useEffect(() => {
+    getEmpLeavesSummary();
+  }, []);
+  const getEmpLeavesSummary = async () => {
+    const { success, leaves_summary } = await leavesSummaryApi({
+      empId,
+      dispatch,
+    });
+    console.log(leaves_summary, "SUMMARY");
+  };
+
   const items = [
     {
       id: 1,
@@ -46,7 +67,6 @@ const LeavesAttendancePage = () => {
     },
   ];
 
-  const navigation = useNavigation();
   const handleApplyLeave = () => {
     navigation.navigate("ApplyLeave");
   };
@@ -124,16 +144,15 @@ const LeavesAttendancePage = () => {
         </View>
 
         <View
-        style={{
-          width: "100%",
-          borderRadius: 20,
-          backgroundColor: "#e2eafa",
-          marginTop: 50,
-        }}
+          style={{
+            width: "100%",
+            borderRadius: 20,
+            backgroundColor: "#e2eafa",
+            marginTop: 50,
+          }}
         >
           <View
             style={{
-              
               marginTop: 20,
             }}
           >

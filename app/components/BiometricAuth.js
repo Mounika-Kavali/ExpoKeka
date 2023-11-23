@@ -6,7 +6,7 @@ import { useNavigation } from "@react-navigation/native";
 import Svg, { G, Path } from "react-native-svg";
 import { ScrollView } from "react-native-gesture-handler";
 import { TouchableOpacity } from "react-native";
-import { employeeDetailsApi } from "../utils/LoginApi";
+import { employeeDetailsApi } from "../utils/ProfileApi";
 import { AppDispatchContext } from "../utils/AppContext";
 
 export default function BiometricAuth() {
@@ -80,7 +80,7 @@ export default function BiometricAuth() {
 
     if (biometricAuth.success) {
 
-      await employeeDetailsApi({empId:2,dispatch});// when biometric is success then employeeDetails API have to be called. 
+      await employeeDetailsApi({userId:2,dispatch});// when biometric is success then employeeDetails API have to be called. 
       navigation.navigate("Main");
       setSvgColor("#fdfdfd");
     }

@@ -11,7 +11,8 @@ import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import styles from "../styles";
 import { FONTS, IMAGES, SIZES } from "../constants/Assets";
-import { employeeDetailsApi, loginApi } from "../utils/LoginApi";
+import { loginApi } from "../utils/LoginApi";
+import { employeeDetailsApi } from "../utils/ProfileApi";
 import BiometricAuth from "./BiometricAuth";
 import LoadingSpinner from "./LoadingSpinner";
 import { AppDispatchContext } from "../utils/AppContext";
@@ -36,12 +37,12 @@ const SignInPage = () => {
       password: password,
     };
     setLoading(true); // Set loading state to true when API call starts
-    const { success, token, userId, error } = await loginApi(payload);
+    const { success, token, userId, error } = await loginApi({payload,dispatch});
 
 
     if (success) {
       console.log("Login successful. Token:", token, "User:", userId);
-      await employeeDetailsApi({empId:userId ,dispatch});
+      await employeeDetailsApi({userId:userId ,dispatch});
       setLoading(false);
 
       setErrorMessage("");

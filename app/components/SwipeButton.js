@@ -140,7 +140,6 @@ const SwipeButton = ({ onToggle }) => {
         </Animated.View>
       </PanGestureHandler>
       <Animated.Text style={[styles.swipeText, AnimatedStyles.swipeText]}>
-        {console.log(toggled, "toggled")}
         {toggled ? "GET STARTED" : "SWIPE ME"}
       </Animated.Text>
     </Animated.View>
