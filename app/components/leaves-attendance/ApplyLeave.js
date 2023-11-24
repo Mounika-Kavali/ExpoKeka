@@ -11,14 +11,17 @@ import {
 } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import styles from "../../styles";
-import axios from "axios";
 
 import { Calendar } from "react-native-calendars";
 import { format } from "date-fns";
 import { FONTS, IMAGES, SIZES } from "../../constants/Assets";
 import LeaveDetailsModal from "../../modals/BottomModals";
 import { AppContext, AppDispatchContext } from "../../utils/AppContext";
-import { EmployeesByPositionApi, applyLeaveApi } from "../../utils/LeavesApi";
+import {
+  EmployeesByPositionApi,
+  applyLeaveApi,
+  leavesTrackingApi,
+} from "../../utils/LeavesApi";
 import { employeeDetailsApi } from "../../utils/ProfileApi";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -27,13 +30,15 @@ const ApplyLeave = () => {
   const [toDate, setToDate] = useState("");
   const [leaveType, setLeaveType] = useState(null);
   const [reason, setReason] = useState("");
-  const [notifyManager, setNotifyManager] = useState(20236);
+  const [notifyManager, setNotifyManager] = useState();
+  const [notifyManagerId, setNotifyManagerId] = useState(0);
   const [isFocus, setIsFocus] = useState(false);
   const [range, setRange] = useState({});
 
   const [leaveDetails, setLeaveDetails] = useState({});
-  const [employeeNames, setEmployeeNames] = useState([]);
   const [curMonth, setCurMonth] = useState("");
+
+  const [managerList, setManagerList] = useState([]);
 
   const dispatch = useContext(AppDispatchContext);
   const state = useContext(AppContext);
@@ -47,26 +52,33 @@ const ApplyLeave = () => {
 
   useEffect(() => {
     setCurMonth(new Date());
-    // getNotifyEmployeeNames();
+    getNotifyEmployeeNames();
   }, []);
 
   const getNotifyEmployeeNames = async () => {
     const position = "Manager";
-    await EmployeesByPositionApi({ pos: position });
+    const { empByPosition } = await EmployeesByPositionApi({ pos: position });
+    console.log(empByPosition, "empByPosition");
+    const list = empByPosition.map((employee) => ({
+      label: employee.employee_name,
+      value: employee.employee_id,
+    }));
+    setManagerList(list);
   };
   const handleApplyLeave = async () => {
     const leaveDetails = {
       from_date: fromDate,
       to_date: toDate,
       leave_type: leaveType,
-      notify: notifyManager,
+      notify: notifyManagerId,
       reason: reason,
       status: "PENDING",
       employee: empId,
     };
+    console.log(leaveDetails, "leaveDetails");
     setLeaveDetails(leaveDetails);
     await applyLeaveApi({ leaveDetails });
-    employeeDetailsApi({ empId, dispatch });
+    leavesTrackingApi({ empId, dispatch });
   };
 
   function CustomCalendar(props) {
@@ -116,7 +128,7 @@ const ApplyLeave = () => {
         let newRange = { ...range, ...{ endDate: day.dateString } };
         props.onRangeSelected && props.onRangeSelected(newRange);
         setRange(newRange);
-        if (newRange.endDate > newRange.startDate) {
+        if (newRange.endDate >= newRange.startDate) {
           setFromDate(format(new Date(range.startDate), "yyyy-MM-dd"));
           setToDate(format(new Date(day.dateString), "yyyy-MM-dd"));
         }
@@ -224,7 +236,7 @@ const ApplyLeave = () => {
             <Text>Reason for Leave</Text>
             <TextInput
               multiline
-              numberOfLines={4}
+              numberOfLines={3}
               value={reason}
               onChangeText={(text) => setReason(text)}
               style={{
@@ -233,10 +245,11 @@ const ApplyLeave = () => {
                 padding: 5,
                 borderRadius: 10,
                 color: "#865be3",
+                fontSize: 18,
               }}
             />
           </View>
-
+          {console.log(managerList, "mnagaerList state")}
           <View style={leaveApplyStyles.labelInputContainer}>
             <View style={leaveApplyStyles.labelContainer}>
               <Text>Notify to</Text>
@@ -246,10 +259,10 @@ const ApplyLeave = () => {
                 placeholderStyle={{ color: "gray" }}
                 selectedTextStyle={{ color: "#865be3" }}
                 inputSearchStyle={{ color: "grey" }}
-                data={employeeNames}
+                data={managerList}
                 search
                 labelField="label"
-                valueField="label"
+                valueField="value"
                 placeholder={!isFocus ? "Reporting manager " : "..."}
                 searchPlaceholder="Search..."
                 value={notifyManager}
@@ -257,13 +270,13 @@ const ApplyLeave = () => {
                 onBlur={() => setIsFocus(false)}
                 onChange={(item) => {
                   setNotifyManager(item.label);
+                  setNotifyManagerId(item.value);
                   setIsFocus(false);
                 }}
               />
             </View>
           </View>
           <View style={{ marginTop: 20, marginHorizontal: 80 }}>
-            {/* <Button title="Apply" onPress={handleApplyLeave} /> */}
             <TouchableOpacity onPress={handleApplyLeave}>
               <Text
                 style={[

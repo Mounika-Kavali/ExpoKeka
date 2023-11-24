@@ -7,7 +7,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import styles from "../../styles";
+import styles from "../../styles/index";
 import { useNavigation } from "@react-navigation/native";
 import { FONTS, IMAGES, SIZES } from "../../constants/Assets";
 import LeavesTabs from "../../navigation/LeavesNavigator";
@@ -16,6 +16,7 @@ import {
   EmployeesByPositionApi,
   leavesSummaryApi,
 } from "../../utils/LeavesApi";
+import { LeavesOverviewListItem } from "../ListItem";
 
 const LeavesAttendancePage = () => {
   const navigation = useNavigation();
@@ -27,51 +28,52 @@ const LeavesAttendancePage = () => {
     getEmpLeavesSummary();
   }, []);
   const getEmpLeavesSummary = async () => {
-    const { success, leaves_summary } = await leavesSummaryApi({
+    await leavesSummaryApi({
       empId,
       dispatch,
     });
-    console.log(leaves_summary, "SUMMARY");
   };
+  const leaves_summary = state.empLeavesSummary;
+  const annual_leaves_consumed =
+    leaves_summary.total_annual_leaves -
+    (leaves_summary.sick_leaves_consumed +
+      leaves_summary.casual_leaves_consumed);
 
-  const items = [
-    {
+  const AllLeaves = {
+    1: {
       id: 1,
-      title: "Annual Leaves",
-      borderColor: "#008B8B",
-      backgroundColor: "#a5d9ed",
-      totalCount: "24",
-      usedCount: "20",
+      label: "Annual Leaves",
+      consumedLeaves: annual_leaves_consumed,
+      totalLeaves: leaves_summary.total_annual_leaves,
+      styles: { borderColor: "#008B8B", backgroundColor: "#a5d9ed" },
     },
-    {
+    2: {
       id: 2,
-      title: "Sick Leaves",
-      borderColor: "#DB7093",
-      backgroundColor: "#f2cad7",
-      totalCount: "4",
-      usedCount: "9",
+      label: "Sick Leaves",
+      consumedLeaves: leaves_summary.sick_leaves_consumed,
+      totalLeaves: leaves_summary.total_sick_leaves,
+      styles: { borderColor: "#DB7093", backgroundColor: "#f2cad7" },
     },
-    {
+    3: {
       id: 3,
-      title: "Unpaid Leaves",
-      borderColor: "#FF7F50",
-      backgroundColor: "#ffd9cb",
-      count: "6",
+      label: "Casual Leaves",
+      consumedLeaves: leaves_summary.casual_leaves_consumed,
+      totalLeaves: leaves_summary.total_casual_leaves,
+      styles: { borderColor: "#FF7F50", backgroundColor: "#ffd9cb" },
     },
-    {
+    4: {
       id: 4,
-      title: "Cancelled Leaves",
-      borderColor: "#E9967A",
-      backgroundColor: "#c7544e",
-      count: "2",
+      label: "Unpaid Leaves",
+      consumedLeaves: leaves_summary.unpaid_leaves_consumed,
+      styles: { borderColor: "#cd2921", backgroundColor: "#f7a7a3" },
     },
-  ];
+  };
 
   const handleApplyLeave = () => {
     navigation.navigate("ApplyLeave");
   };
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{ backgroundColor: "#fff" }}>
       <ScrollView>
         <View
           style={{
@@ -87,62 +89,29 @@ const LeavesAttendancePage = () => {
               <Text style={[styles.btn, styles.h6]}> + Apply Leave</Text>
             </TouchableOpacity>
           </View>
-          <View style={gridStyles.rowContainer}>
-            {items.slice(0, 2).map((item) => (
-              <View
-                key={item.id}
-                style={[
-                  gridStyles.gridItem,
-                  {
-                    borderColor: item.borderColor,
-                    backgroundColor: item.backgroundColor,
-                  },
-                ]}
-              >
-                <Text style={[styles.h5, gridStyles.gridItemText]}>
-                  {item.title}
-                </Text>
-                {item.totalCount && (
-                  <View>
-                    <Text style={gridStyles.gridItemText}>
-                      <Text style={styles.h3}>{item.usedCount}</Text>
-                      <Text style={gridStyles.totalCount}>/</Text>
-                      <Text style={[styles.p, gridStyles.totalCount]}>
-                        {item.totalCount}
-                      </Text>
-                    </Text>
-                  </View>
-                )}
-              </View>
-            ))}
-          </View>
-          <View style={gridStyles.rowContainer}>
-            {items.slice(2).map((item) => (
-              <View
-                key={item.id}
-                style={[
-                  gridStyles.gridItem,
-                  {
-                    borderColor: item.borderColor,
-                    backgroundColor: item.backgroundColor,
-                  },
-                ]}
-              >
-                <Text style={[styles.h5, gridStyles.gridItemText]}>
-                  {item.title}
-                </Text>
-                {item.count && (
-                  <View>
-                    <Text style={gridStyles.gridItemText}>
-                      <Text style={styles.h3}>{item.count}</Text>
-                    </Text>
-                  </View>
-                )}
-              </View>
-            ))}
+
+          <View style={{ width: "100%" }}>
+            <View
+              style={{
+                flexDirection: "row",
+                flexWrap: "wrap",
+                justifyContent: "space-around",
+              }}
+            >
+              {Object.values(AllLeaves).map(
+                ({ id, label, consumedLeaves, totalLeaves, styles }) => (
+                  <LeavesOverviewListItem
+                    key={id}
+                    label={label}
+                    consumedLeaves={consumedLeaves}
+                    totalLeaves={totalLeaves}
+                    leaveStyles={styles}
+                  />
+                )
+              )}
+            </View>
           </View>
         </View>
-
         <View
           style={{
             width: "100%",
@@ -170,28 +139,6 @@ const gridStyles = StyleSheet.create({
     flexDirection: "row",
     marginHorizontal: 20,
     marginTop: 5,
-  },
-
-  rowContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  gridItem: {
-    width: "40%",
-    borderWidth: 2,
-    borderRadius: 10,
-    paddingLeft: 5,
-    margin: 20,
-  },
-  gridItemText: {
-    textAlign: "left",
-    paddingTop: 5,
-    paddingBottom: 10,
-    paddingLeft: 5,
-  },
-  totalCount: {
-    color: "black",
-    fontSize: 18,
   },
 });
 

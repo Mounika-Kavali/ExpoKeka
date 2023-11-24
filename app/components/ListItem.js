@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text } from "react-native";
+import styles from "../styles/index";
 
 export const ProfileDataListItem = ({ label, value }) => (
   <View
@@ -149,7 +150,7 @@ export const LeavesListItem = ({
             />
             <ListItem
               title={
-                status === "APPROVED" || "PENDING"
+                status === "APPROVED" || status === "PENDING"
                   ? "Approved By"
                   : "Cancelled By"
               }
@@ -159,6 +160,67 @@ export const LeavesListItem = ({
           </View>
         </View>
       </View>
+    </View>
+  );
+};
+
+export const LeavesOverviewListItem = ({
+  label,
+  consumedLeaves,
+  totalLeaves,
+  leaveStyles,
+}) => {
+  return (
+    <View  style={{ width: 150 }}>
+        <View
+          style={[
+            leaveStyles,
+            {
+              width: "100%",
+              borderWidth: 2,
+              borderRadius: 10,
+              paddingHorizontal: 5,
+              margin: 10,
+            },
+          ]}
+        >
+          <Text
+            style={[
+              styles.h5,
+              {
+                textAlign: "left",
+                paddingTop: 5,
+                paddingBottom: 10,
+                paddingLeft: 5,
+              },
+            ]}
+          >
+            {label}
+          </Text>
+
+          <View>
+            <View
+              style={{
+                flexDirection: "row",
+                paddingTop: 5,
+                paddingBottom: 10,
+                paddingLeft: 5,
+              }}
+            >
+              <Text style={styles.h3}>{consumedLeaves}</Text>
+              {totalLeaves && (
+                <Text
+                  style={[
+                    styles.p,
+                    { lineHeight: 45, color: "black", fontSize: 20 },
+                  ]}
+                >
+                  /{totalLeaves}
+                </Text>
+              )}
+            </View>
+          </View>
+        </View>
     </View>
   );
 };

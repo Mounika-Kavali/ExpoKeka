@@ -10,7 +10,6 @@ export const leavesSummaryApi = async ({ empId, dispatch }) => {
   try {
     const response = await axios.get(`${EMP_LEAVES_SUMMARY_API}${empId}/`);
     const leaves_summary = response.data;
-    console.log(leaves_summary, "leaves_summary");
     // Dispatch action to update context
     dispatch({ type: "GET_EMP_LEAVES_SUMMARY", payload: leaves_summary });
     return { success: true, leaves_summary };
@@ -47,7 +46,7 @@ export const EmployeesByPositionApi = async ({ pos }) => {
   try {
     const response = await axios.get(`${EMPS_BY_POSITION_API}${pos}/`);
     const empByPosition = response.data;
-    console.log(empByPosition, "empByPosition");
+    
     return { success: true, empByPosition };
   } catch (error) {
     console.error("EmployeesByPosition API error:", error);
