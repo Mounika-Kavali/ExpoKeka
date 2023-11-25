@@ -6,12 +6,14 @@ import {
 
 export const employeeDetailsApi = async ({ userId, dispatch }) => {
   try {
+    dispatch({ type: "GET_EMP_DETAILS_PENDING" });
     const response = await axios.get(`${EMPLOYEE_DETAILS_API}${userId}/`);
     const emp_details = response.data;
 
     // Dispatch action to update context
-    dispatch({ type: "GET_EMP_DETAILS", payload: emp_details });
+    dispatch({ type: "GET_EMP_DETAILS_SUCCESS", payload: emp_details });
   } catch (error) {
+    dispatch({ type: "GET_EMP_DETAILS_FAILURE", error });
     console.error("Employee details fetching error:", error);
   }
 };

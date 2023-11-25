@@ -15,7 +15,7 @@ import { loginApi } from "../utils/LoginApi";
 import { employeeDetailsApi } from "../utils/ProfileApi";
 import BiometricAuth from "./BiometricAuth";
 import LoadingSpinner from "./LoadingSpinner";
-import { AppDispatchContext } from "../utils/AppContext";
+import { AppContext, AppDispatchContext } from "../utils/AppContext";
 
 const SignInPage = () => {
   const navigation = useNavigation();
@@ -25,7 +25,9 @@ const SignInPage = () => {
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [secureTextEntry, setSecureTextEntry] = useState(true);
-  const [loading, setLoading] = useState(false);
+
+  const state = useContext(AppContext);
+  const loader = state.login.isLoading;
 
   const toggleSecureTextEntry = () => {
     setSecureTextEntry(!secureTextEntry);
@@ -36,24 +38,23 @@ const SignInPage = () => {
       username: username,
       password: password,
     };
-    setLoading(true); // Set loading state to true when API call starts
-    const { success, token, userId, error } = await loginApi({payload,dispatch});
-
+    const { success, token, userId, error } = await loginApi({
+      payload,
+      dispatch,
+    });
 
     if (success) {
       console.log("Login successful. Token:", token, "User:", userId);
-      await employeeDetailsApi({userId:userId ,dispatch});
-      setLoading(false);
+      await employeeDetailsApi({ userId: userId, dispatch });
 
       setErrorMessage("");
       navigation.navigate("Main");
     } else {
       console.error("Login failed. Error:", error);
       setErrorMessage(error);
-      setLoading(false);
     }
   };
-
+  //VALIDATIONS
   const onBlurUsername = () => {
     if (username.trim() == "") {
       setErrorMessage("Username is required");
@@ -79,7 +80,7 @@ const SignInPage = () => {
     <View style={{ flex: 1, paddingVertical: SIZES.p30 }}>
       <View style={{ alignItems: "center" }}>
         <Text style={styles.h2}>Welcome Back!</Text>
-        <Text style={[styles.p, { color: "pink", marginBottom: 10, }]}>
+        <Text style={[styles.p, { color: "pink", marginBottom: 10 }]}>
           welcome back we missed you.
         </Text>
         <View style={{ width: "80%" }}>
@@ -118,7 +119,7 @@ const SignInPage = () => {
             mode="outlined"
             dense={true}
             label={<Text style={{ color: "#000" }}> Password </Text>}
-            style={[styles.input,{ marginTop: 20,}]}
+            style={[styles.input, { marginTop: 20 }]}
             placeholder="Password"
             outlineColor={"#000"}
             outlineStyle={{ borderRadius: 20 }}
@@ -189,7 +190,7 @@ const SignInPage = () => {
               }}
             >
               <View style={{ flexDirection: "row" }}>
-                {loading && <LoadingSpinner visible={loading}/>}
+                {loader && <LoadingSpinner visible={loader} size={"small"} />}
                 <Text style={{ fontSize: 18, paddingHorizontal: 10 }}>
                   Sign In
                 </Text>
@@ -208,6 +209,5 @@ const SignInPage = () => {
     </View>
   );
 };
-
 
 export default SignInPage;

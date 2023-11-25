@@ -8,31 +8,37 @@ import {
 
 export const leavesSummaryApi = async ({ empId, dispatch }) => {
   try {
+    dispatch({ type: "GET_EMP_LEAVES_SUMMARY_PENDING" });
     const response = await axios.get(`${EMP_LEAVES_SUMMARY_API}${empId}/`);
     const leaves_summary = response.data;
     // Dispatch action to update context
-    dispatch({ type: "GET_EMP_LEAVES_SUMMARY", payload: leaves_summary });
+    dispatch({
+      type: "GET_EMP_LEAVES_SUMMARY_SUCCESS",
+      payload: leaves_summary,
+    });
     return { success: true, leaves_summary };
   } catch (error) {
+    dispatch({ type: "GET_EMP_LEAVES_SUMMARY_FAILURE", error });
     console.error("Employee leaves histoty fetching error:", error);
   }
 };
 
 export const leavesTrackingApi = async ({ empId, dispatch }) => {
   try {
+    dispatch({ type: "GET_LEAVES_HISTORY_PENDING" });
     const response = await axios.get(`${LEAVES_TRACKING_API}${empId}/`);
     const leaves_history = response.data;
 
     // Dispatch action to update context
-    dispatch({ type: "GET_LEAVES_HISTORY", payload: leaves_history });
+    dispatch({ type: "GET_LEAVES_HISTORY_SUCCESS", payload: leaves_history });
   } catch (error) {
+    dispatch({ type: "GET_LEAVES_HISTORY_FAILURE", error });
     console.error("Employee leaves histoty fetching error:", error);
   }
 };
 
 export const applyLeaveApi = async ({ leaveDetails }) => {
   try {
-    console.log(leaveDetails, "leaveDetails");
     const response = await axios.post(`${LEAVE_APPLY_API}`, leaveDetails);
     const status = response.data;
     return { success: true, status };
@@ -46,7 +52,7 @@ export const EmployeesByPositionApi = async ({ pos }) => {
   try {
     const response = await axios.get(`${EMPS_BY_POSITION_API}${pos}/`);
     const empByPosition = response.data;
-    
+
     return { success: true, empByPosition };
   } catch (error) {
     console.error("EmployeesByPosition API error:", error);

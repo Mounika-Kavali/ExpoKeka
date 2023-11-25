@@ -1,53 +1,43 @@
 import React, { createContext, useReducer, useContext } from "react";
+import { combineReducers } from "redux";
+import loginReducer from "./reducers/loginReducer";
+import profileReducer from "./reducers/profileReducer";
+import leavesReducer from "./reducers/leavesReducer";
 
-// Define the initial state
-const initialState = {
-  token: "",
-  empId: 0,
-  empDetails: null,
-  empLeavesHistory: [],
-  empLeavesSummary: {},
+const rootReducer = combineReducers({
+  login: loginReducer,
+  profile: profileReducer,
+  leaves: leavesReducer,
+});
+
+const initialAppState = {
+  login: {
+    token: "",
+    userId: 0,
+    isLoading: false,
+    hasError: "",
+  },
+  profile: {
+    empId: 0,
+    empDetails: null,
+    isLoading: false,
+    hasError: "",
+  },
+  leaves: {
+    empLeavesHistory: [],
+    empLeavesSummary: {},
+    isLoading: false,
+    hasError: "",
+  },
 };
 
 // Create the context
 export const AppContext = createContext(null);
 export const AppDispatchContext = createContext(null);
 
-// Create the reducer function
-const appReducer = (state, action) => {
-  switch (action.type) {
-    case "GET_LOGIN_DETAILS":
-      console.log(action.payload.token, "action.payload.token");
-      return {
-        ...state,
-        token: action.payload.token,
-        userId: action.payload.userId,
-      };
-    case "GET_EMP_DETAILS":
-      const { employee_id } = action.payload;
-      return {
-        ...state,
-        empDetails: action.payload,
-        empId: employee_id,
-      };
-    case "GET_EMP_LEAVES_SUMMARY":
-      return {
-        ...state,
-        empLeavesSummary: action.payload,
-      };
-    case "GET_LEAVES_HISTORY":
-      return {
-        ...state,
-        empLeavesHistory: action.payload,
-      };
-    default:
-      return state;
-  }
-};
-
 // Create the context provider
 const AppContextProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(appReducer, initialState);
+  const [state, dispatch] = useReducer(rootReducer, initialAppState);
 
   return (
     <AppContext.Provider value={state}>
@@ -58,9 +48,15 @@ const AppContextProvider = ({ children }) => {
   );
 };
 
-// Create a custom hook to use the context
-// export const useAppContext = () => {
-//   return useContext(AppContext);
+//CUSTOM HOOK
+// const SignInPage = () => {
+//   const { state, dispatch } = useAppContext();
+//   const loader = state.login.isLoading;
+
+// const useAppContext = () => {
+//   const state = useContext(AppContext);
+//   const dispatch = useContext(AppDispatchContext);
+//   return { state, dispatch };
 // };
 
 export { AppContextProvider };

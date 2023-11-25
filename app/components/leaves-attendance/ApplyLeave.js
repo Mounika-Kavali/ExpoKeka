@@ -30,9 +30,9 @@ const ApplyLeave = () => {
   const [toDate, setToDate] = useState("");
   const [leaveType, setLeaveType] = useState(null);
   const [reason, setReason] = useState("");
-  const [notifyManager, setNotifyManager] = useState();
+  const [notifyManager, setNotifyManager] = useState(null);
   const [notifyManagerId, setNotifyManagerId] = useState(0);
-  const [isFocus, setIsFocus] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
   const [range, setRange] = useState({});
 
   const [leaveDetails, setLeaveDetails] = useState({});
@@ -42,11 +42,25 @@ const ApplyLeave = () => {
 
   const dispatch = useContext(AppDispatchContext);
   const state = useContext(AppContext);
-  const empId = state.empId;
+  const empId = state.profile.empId;
+  const leaves_summary = state.leaves.empLeavesSummary;
+
+  const available_sick_leaves =
+    leaves_summary.total_sick_leaves - leaves_summary.sick_leaves_consumed;
+  const available_casual_leaves =
+    leaves_summary.total_casual_leaves - leaves_summary.casual_leaves_consumed;
 
   const type_of_leaves = [
-    { label: "Medical leave", value: "sick" },
-    { label: "Casual Leave", value: "casual" },
+    {
+      label: "Medical leave",
+      value: "sick",
+      availableLeaves: available_sick_leaves,
+    },
+    {
+      label: "Casual Leave",
+      value: "casual",
+      availableLeaves: available_casual_leaves,
+    },
     { label: "Unpaid leave", value: "unpaid" },
   ];
 
@@ -220,13 +234,58 @@ const ApplyLeave = () => {
               <Dropdown
                 placeholderStyle={{ color: "gray" }}
                 selectedTextStyle={{ color: "#865be3" }}
-                data={type_of_leaves}
+                data={type_of_leaves.map((item) => ({
+                  ...item,
+                  disabled: item.availableLeaves <= 0,
+                }))}
                 labelField="label"
                 valueField="value"
                 placeholder="Select Leave type"
                 value={leaveType}
-                onChange={(item) => {
-                  setLeaveType(item.value);
+                dropdownPosition="bottom"
+                renderItem={(item, isSelected) => (
+                  <TouchableOpacity
+                    onPress={() => {
+                      if (!item.disabled) {
+                        setLeaveType(item.value);
+                      } else {
+                        setLeaveType(null);
+                      }
+                    }}
+                    style={{
+                      padding: 10,
+                      backgroundColor: isSelected ? "#fae4f9" : "#fff",
+                    }}
+                  >
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <Text
+                        style={{
+                          color: item.disabled
+                            ? "#777"
+                            : isSelected
+                            ? "#865be3"
+                            : "#000",
+                        }}
+                      >
+                        {item.label}
+                      </Text>
+                      {item.availableLeaves && (
+                        <Text style={{ color: "gray", fontSize: 12 }}>
+                          {item.availableLeaves} Available
+                        </Text>
+                      )}
+                    </View>
+                  </TouchableOpacity>
+                )}
+                //when disabled option is clicked onChange() is triggered.
+                onChange={(selectedItem) => {
+                  setLeaveType(null);
+                  console.log("Selected Item: ", selectedItem);
                 }}
               />
             </View>
@@ -249,7 +308,7 @@ const ApplyLeave = () => {
               }}
             />
           </View>
-          {console.log(managerList, "mnagaerList state")}
+
           <View style={leaveApplyStyles.labelInputContainer}>
             <View style={leaveApplyStyles.labelContainer}>
               <Text>Notify to</Text>
@@ -263,15 +322,37 @@ const ApplyLeave = () => {
                 search
                 labelField="label"
                 valueField="value"
-                placeholder={!isFocus ? "Reporting manager " : "..."}
+                value={notifyManagerId}
+                dropdownPosition="top"
+                placeholder={!isFocused ? "Reporting manager " : "..."}
                 searchPlaceholder="Search..."
-                value={notifyManager}
-                onFocus={() => setIsFocus(true)}
-                onBlur={() => setIsFocus(false)}
+                onFocus={() => setIsFocused(true)}
+                onBlur={() => setIsFocused(false)}
+                // renderItem={(item, isSelected) => (
+                //   <TouchableOpacity
+                //     onPress={() => {
+                //       setNotifyManager(item.label);
+                //       setNotifyManagerId(item.value);
+                //       setIsFocused(false);
+                //     }}
+                //     style={{
+                //       padding: 10,
+                //       backgroundColor: isSelected ? "#fae4f9" : "#fff",
+                //     }}
+                //   >
+                //     <Text
+                //       style={{
+                //         color: isSelected ? "#865be3" : "#000",
+                //       }}
+                //     >
+                //       {item.label}
+                //     </Text>
+                //   </TouchableOpacity>
+                // )}
                 onChange={(item) => {
                   setNotifyManager(item.label);
                   setNotifyManagerId(item.value);
-                  setIsFocus(false);
+                  setIsFocused(false);
                 }}
               />
             </View>

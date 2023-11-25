@@ -22,7 +22,7 @@ const LeavesAttendancePage = () => {
   const navigation = useNavigation();
   const dispatch = useContext(AppDispatchContext);
   const state = useContext(AppContext);
-  const empId = state.empId;
+  const empId = state.profile.empId;
 
   useEffect(() => {
     getEmpLeavesSummary();
@@ -33,7 +33,7 @@ const LeavesAttendancePage = () => {
       dispatch,
     });
   };
-  const leaves_summary = state.empLeavesSummary;
+  const leaves_summary = state.leaves.empLeavesSummary;
   const annual_leaves_consumed =
     leaves_summary.total_annual_leaves -
     (leaves_summary.sick_leaves_consumed +

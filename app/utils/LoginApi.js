@@ -1,17 +1,17 @@
 import axios from "axios";
 import { LOGIN_API } from "../environment.development";
 
-export const loginApi = async ({payload,dispatch}) => {
+export const loginApi = async ({ payload, dispatch }) => {
   try {
+    dispatch({ type: "GET_LOGIN_DETAILS_PENDING" });
     const response = await axios.post(`${LOGIN_API}`, payload);
-    console.log("LOGIN API called");
     const { token, userId } = response.data;
 
     // Dispatch action to update context
-    dispatch({ type: "GET_LOGIN_DETAILS", payload: response.data });
+    dispatch({ type: "GET_LOGIN_DETAILS_SUCCESS", payload: response.data });
     return { success: true, token, userId };
   } catch (error) {
-    console.error("Login API error:", error);
+    dispatch({ type: "GET_LOGIN_DETAILS_FAILURE", error });
     return { success: false, error: "Login failed. Please try again." };
   }
 };

@@ -3,12 +3,14 @@ import { View, ScrollView } from "react-native";
 import { AppContext, AppDispatchContext } from "../../utils/AppContext";
 import { leavesTrackingApi } from "../../utils/LeavesApi";
 import { LeavesListItem } from "../ListItem";
+import LoadingSpinner from "../LoadingSpinner";
 
 function UpcomingLeavesTab() {
   const dispatch = useContext(AppDispatchContext);
   const state = useContext(AppContext);
-  const empId = state.empId;
-  const EmpLeavesHistory = state.empLeavesHistory;
+  const empId = state.profile.empId;
+  const EmpLeavesHistory = state.leaves.empLeavesHistory;
+  const loader = state.leaves.isLoading;
   const currentDate = new Date();
 
   useEffect(() => {
@@ -26,18 +28,26 @@ function UpcomingLeavesTab() {
 
   return (
     <View>
-      {console.log(upcomingLeavesData, "upcomingLeavesData")}
-
-      {upcomingLeavesData.map((item) => (
-        <LeavesListItem
-          key={item.id}
-          value={`${item.from_date} - ${item.to_date}`}
-          status={item.status}
-          applyDays={item.number_of_days}
-          leaveType={item.leave_type}
-          approvedBy={item.approved_by}
+      {loader ? (
+        <LoadingSpinner
+          visible={loader}
+          size={"large"}
+          styles={{ marginVertical: 40 }}
         />
-      ))}
+      ) : (
+        <>
+          {upcomingLeavesData.map((item) => (
+            <LeavesListItem
+              key={item.id}
+              value={`${item.from_date} - ${item.to_date}`}
+              status={item.status}
+              applyDays={item.number_of_days}
+              leaveType={item.leave_type}
+              approvedBy={item.approved_by}
+            />
+          ))}
+        </>
+      )}
     </View>
   );
 }

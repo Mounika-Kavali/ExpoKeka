@@ -171,7 +171,7 @@ export const LeavesOverviewListItem = ({
   leaveStyles,
 }) => {
   return (
-    <View  style={{ width: 150 }}>
+    <View  style={{ width: 150,justifyContent:"space-around" }}>
         <View
           style={[
             leaveStyles,
@@ -202,18 +202,16 @@ export const LeavesOverviewListItem = ({
             <View
               style={{
                 flexDirection: "row",
-                paddingTop: 5,
-                paddingBottom: 10,
                 paddingLeft: 5,
               }}
             >
-              <Text style={styles.h3}>{consumedLeaves}</Text>
+              <Text style={{fontSize: 30,fontWeight:600, lineHeight:40,}}>{consumedLeaves}</Text>
               {totalLeaves && (
                 <Text
-                  style={[
-                    styles.p,
-                    { lineHeight: 45, color: "black", fontSize: 20 },
-                  ]}
+                  style={{
+                    fontSize: 20,
+                    lineHeight:45,
+                  }}
                 >
                   /{totalLeaves}
                 </Text>

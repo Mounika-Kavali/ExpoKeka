@@ -7,13 +7,13 @@ import {
   ImageBackground,
 } from "react-native";
 import { FONTS, IMAGES, SIZES } from "../constants/Assets";
-import {ProfileDataListItem} from "./ListItem";
+import { ProfileDataListItem } from "./ListItem";
 import { AppContext } from "../utils/AppContext";
 import DocumentPickerScreen from "./DocumentPickerScreen";
 
 const ProfilePage = () => {
   const state = useContext(AppContext);
-  const empDetails = state.empDetails;
+  const empDetails = state.profile.empDetails;
 
   const empLabels = {
     employee_id: "Employee ID",
