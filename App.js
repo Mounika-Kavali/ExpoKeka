@@ -10,8 +10,8 @@ export default function App() {
   }
   return (
     <SafeAreaProvider>
-       <AppContextProvider>
-      <AppNavigator />
+      <AppContextProvider>
+        <AppNavigator />
       </AppContextProvider>
     </SafeAreaProvider>
   );

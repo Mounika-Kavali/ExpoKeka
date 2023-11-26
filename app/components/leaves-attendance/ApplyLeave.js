@@ -24,6 +24,7 @@ import {
 } from "../../utils/LeavesApi";
 import { employeeDetailsApi } from "../../utils/ProfileApi";
 import { SafeAreaView } from "react-native-safe-area-context";
+import ConfirmModal from "../../modals/BottomModals";
 
 const ApplyLeave = () => {
   const [fromDate, setFromDate] = useState("");
@@ -40,9 +41,12 @@ const ApplyLeave = () => {
 
   const [managerList, setManagerList] = useState([]);
 
+  const [modalVisible, setModalVisible] = useState(false);
+
   const dispatch = useContext(AppDispatchContext);
   const state = useContext(AppContext);
   const empId = state.profile.empId;
+  const loader = state.leaves.isLoading;
   const leaves_summary = state.leaves.empLeavesSummary;
 
   const available_sick_leaves =
@@ -93,6 +97,8 @@ const ApplyLeave = () => {
     setLeaveDetails(leaveDetails);
     await applyLeaveApi({ leaveDetails });
     leavesTrackingApi({ empId, dispatch });
+
+    setModalVisible(true); //to get bottom modal
   };
 
   function CustomCalendar(props) {
@@ -368,6 +374,18 @@ const ApplyLeave = () => {
                 Apply
               </Text>
             </TouchableOpacity>
+          </View>
+          <View>
+            {
+              <ConfirmModal
+                show={modalVisible}
+                title="Applied Leave"
+                okButtonText="Done"
+                showSpinner={loader}
+                okButtonColor="#865be3"
+                handleOkButton={() => setModalVisible(false)} // Close the modal when the OK button is pressed
+              />
+            }
           </View>
         </View>
       </ScrollView>

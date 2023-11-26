@@ -15,6 +15,18 @@ const ProfilePage = () => {
   const state = useContext(AppContext);
   const empDetails = state.profile.empDetails;
 
+  const leaves_summary = state.leaves.empLeavesSummary;
+  const annual_leaves_consumed =
+    leaves_summary.total_annual_leaves -
+    (leaves_summary.sick_leaves_consumed +
+      leaves_summary.casual_leaves_consumed);
+  const available_annual_leaves =
+    leaves_summary.total_annual_leaves - annual_leaves_consumed;
+  const available_sick_leaves =
+    leaves_summary.total_sick_leaves - leaves_summary.sick_leaves_consumed;
+  const available_casual_leaves =
+    leaves_summary.total_casual_leaves - leaves_summary.casual_leaves_consumed;
+
   const empLabels = {
     employee_id: "Employee ID",
     employee_name: "Name",
@@ -29,6 +41,35 @@ const ProfilePage = () => {
     martial_status: "Martial Status",
     address: "Address",
   };
+  const Box = ({ text, borderBottomColor, available_leaves }) => (
+    <View
+      style={{
+        width: "30%",
+        height: 70,
+        backgroundColor: "#adcaca",
+        alignItems: "center",
+        borderRadius: 8,
+      }}
+    >
+      <View
+        style={{ borderBottomWidth: 2, borderBottomColor: borderBottomColor }}
+      >
+        <Text
+          style={{
+            color: "#000",
+            fontWeight: "bold",
+          }}
+        >
+          {text}
+        </Text>
+      </View>
+      <View style={{ marginVertical: 5 }}>
+        <Text style={{ fontSize: 24, color: "#685cf0" }}>
+          {available_leaves}
+        </Text>
+      </View>
+    </View>
+  );
 
   return (
     <ScrollView>
@@ -53,7 +94,38 @@ const ProfilePage = () => {
               justifyContent: "center",
               alignItems: "center",
             }}
-          ></View>
+          >
+            <View
+              style={{
+                bottom: 0,
+                position: "absolute",
+              }}
+            >
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  marginBottom: 10,
+                }}
+              >
+                <Box
+                  text="Annual Leaves"
+                  borderBottomColor="#008B8B"
+                  available_leaves={available_annual_leaves}
+                />
+                <Box
+                  text="Sick Leaves"
+                  borderBottomColor="#DB7093"
+                  available_leaves={available_sick_leaves}
+                />
+                <Box
+                  text="Casual Leaves"
+                  borderBottomColor="#FF7F50"
+                  available_leaves={available_casual_leaves}
+                />
+              </View>
+            </View>
+          </View>
         </ImageBackground>
       </View>
       {/* Overlaying View */}
@@ -61,7 +133,7 @@ const ProfilePage = () => {
       <View
         style={{
           width: "100%",
-          height: 300,
+          height: 280,
           borderBottomLeftRadius: 35,
           borderBottomRightRadius: 35,
           overflow: "hidden",
@@ -79,7 +151,8 @@ const ProfilePage = () => {
           {/* PROFILE IMG CIRCLE */}
           <View
             style={{
-              height: "70%", // to display circle not in middle of overlay view
+              height: "60%", // to display circle not in middle of overlay view
+              marginVertical: 15,
               justifyContent: "center",
               alignItems: "center",
             }}
@@ -95,8 +168,17 @@ const ProfilePage = () => {
               }}
             ></View>
           </View>
+          <View style={{ alignItems: "center" }}>
+            <Text style={{ color: "#fff", fontSize: 28 }}>
+              {empDetails.employee_name}
+            </Text>
+            <Text style={{ color: "#fff", fontSize: 18 }}>
+              {empDetails.employee_role}
+            </Text>
+          </View>
         </ImageBackground>
       </View>
+
       {/* DETAILS */}
       <View style={{ marginHorizontal: 30, marginTop: 50 }}>
         {Object.entries(empDetails).map((item, index) => {
