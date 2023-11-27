@@ -8,12 +8,26 @@ import {
 } from "react-native";
 import { FONTS, IMAGES, SIZES } from "../constants/Assets";
 import { ProfileDataListItem } from "./ListItem";
-import { AppContext } from "../utils/AppContext";
+import { AppContext, AppDispatchContext } from "../utils/AppContext";
 import DocumentPickerScreen from "./DocumentPickerScreen";
+import { leavesSummaryApi } from "../utils/LeavesApi";
+import { useEffect } from "react";
 
 const ProfilePage = () => {
   const state = useContext(AppContext);
   const empDetails = state.profile.empDetails;
+  const empId = state.profile.empId;
+  const dispatch = useContext(AppDispatchContext);
+
+  useEffect(() => {
+    getEmpLeavesSummary();
+  }, []);
+  const getEmpLeavesSummary = async () => {
+    await leavesSummaryApi({
+      empId,
+      dispatch,
+    });
+  };
 
   const leaves_summary = state.leaves.empLeavesSummary;
   const annual_leaves_consumed =
@@ -46,9 +60,12 @@ const ProfilePage = () => {
       style={{
         width: "30%",
         height: 70,
-        backgroundColor: "#adcaca",
+        background: "transparent",
         alignItems: "center",
+        borderWidth: 2,
+        borderColor: "#fff",
         borderRadius: 8,
+        paddingHorizontal: 3,
       }}
     >
       <View
@@ -56,15 +73,14 @@ const ProfilePage = () => {
       >
         <Text
           style={{
-            color: "#000",
-            fontWeight: "bold",
+            color: "#fff",
           }}
         >
           {text}
         </Text>
       </View>
       <View style={{ marginVertical: 5 }}>
-        <Text style={{ fontSize: 24, color: "#685cf0" }}>
+        <Text style={{ fontSize: 24, color: "#83dece" }}>
           {available_leaves}
         </Text>
       </View>
@@ -90,7 +106,6 @@ const ProfilePage = () => {
           <View
             style={{
               flex: 1,
-              display: "flex",
               justifyContent: "center",
               alignItems: "center",
             }}

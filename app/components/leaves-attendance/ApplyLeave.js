@@ -20,6 +20,7 @@ import { AppContext, AppDispatchContext } from "../../utils/AppContext";
 import {
   EmployeesByPositionApi,
   applyLeaveApi,
+  leavesSummaryApi,
   leavesTrackingApi,
 } from "../../utils/LeavesApi";
 import { employeeDetailsApi } from "../../utils/ProfileApi";
@@ -99,6 +100,12 @@ const ApplyLeave = () => {
     leavesTrackingApi({ empId, dispatch });
 
     setModalVisible(true); //to get bottom modal
+    //to update leaves summary
+
+    await leavesSummaryApi({
+      empId,
+      dispatch,
+    });
   };
 
   function CustomCalendar(props) {

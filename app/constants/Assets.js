@@ -5,7 +5,7 @@ const passwordKey = require("../../assets/images/key.png");
 const profile = require("../../assets/images/userProfile.png");
 const home = require("../../assets/images/house.png");
 const calendar = require("../../assets/images/calendar.png");
-const chat = require("../../assets/images/messenger.png")
+const chat = require("../../assets/images/messenger.png");
 
 export const IMAGES = {
   user,
@@ -15,7 +15,7 @@ export const IMAGES = {
   calendar,
   chat,
   neonFrontPage,
-  mainScreen
+  mainScreen,
 };
 
 export const SIZES = {
@@ -32,9 +32,9 @@ export const SIZES = {
   medium: 16,
   large: 18,
   extraLarge: 24,
-  quarter:"25%",
+  quarter: "25%",
   half: "50%",
-  threeQuarters:"75%",
+  threeQuarters: "75%",
   full: "100%",
 };
 
@@ -43,4 +43,9 @@ export const FONTS = {
   medium: "PlayfairDisplayMedium",
   bold: "PlayfairDisplayBold",
   italic: "PlayfairDisplayItalic",
+  //ROBOTO FONT
+  RobotoRegular: "RobotoRegular",
+  RobotoMedium: "RobotoMedium",
+  RobotoMediumItalic: "RobotoMediumItalic",
+  RobotoBold: "RobotoBold",
 };
