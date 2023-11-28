@@ -3,7 +3,8 @@ import { View, Text, StyleSheet, ImageBackground } from "react-native";
 import { FONTS, IMAGES, SIZES } from "../constants/Assets";
 import { format } from "date-fns";
 import { AppContext } from "../utils/AppContext";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
+import { LinearGradient } from "expo-linear-gradient";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 
 const HomePage = () => {
@@ -154,13 +155,11 @@ const HomePage = () => {
       {/* FIRST VIEW UPON SECOND VIEW */}
       <View
         style={{
-          flex: 1,
           width: "80%",
           backgroundColor: "#fff",
           borderRadius: 15,
-          position: "absolute",
-          top: "60%",
-          zIndex: 99,
+          position: "relative",
+          top: "-12%",
           borderWidth: 1,
           borderColor: "white",
           elevation: 5, // Add elevation for box shadow
@@ -253,42 +252,115 @@ const HomePage = () => {
             </View>
           </TouchableOpacity>
         </View>
+      </View>
+      {/* FOR 4 ICONS */}
+      <View
+        style={{
+          width: "100%",
+          top: "-5%",
+          position: "relative",
+          paddingHorizontal: 10,
+        }}
+      >
+        <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
+          <View style={styles.iconLabelContainer}>
+            <TouchableOpacity
+              style={[styles.iconContainer, { backgroundColor: "#f7b627" }]}
+            >
+              <MaterialIcons name="access-time" color="white" size={30} />
+            </TouchableOpacity>
+            <Text style={styles.iconText}>Attendance Log</Text>
+          </View>
 
-        {/* FOR 4 ICONS */}
+          <View style={styles.iconLabelContainer}>
+            <TouchableOpacity
+              style={[styles.iconContainer, { backgroundColor: "#f72789" }]}
+            >
+              <MaterialIcons name="assignment" color="white" size={30} />
+            </TouchableOpacity>
+            <Text style={styles.iconText}>Timesheets</Text>
+          </View>
+
+          <View style={styles.iconLabelContainer}>
+            <TouchableOpacity
+              style={[styles.iconContainer, { backgroundColor: "#27c1f7" }]}
+            >
+              <MaterialIcons name="beach-access" color="white" size={30} />
+            </TouchableOpacity>
+            <Text style={styles.iconText}>Leave</Text>
+          </View>
+
+          <View style={styles.iconLabelContainer}>
+            <TouchableOpacity
+              style={[styles.iconContainer, { backgroundColor: "#dc27f7" }]}
+            >
+              <MaterialIcons name="person" color="white" size={30} />
+            </TouchableOpacity>
+            <Text style={styles.iconText}>HR Request</Text>
+          </View>
+        </View>
+        {/* HOLIDAYS VIEW */}
         <View
           style={{
-            flexDirection: "row",
-            justifyContent: "space-around",
-            marginTop: 20,
+            width: "100%",
+            marginVertical: "10%",
           }}
         >
-          <TouchableOpacity
-            style={[styles.iconContainer, { backgroundColor: "#f7b627" }]}
+          <LinearGradient
+            colors={["#f58ed2", "#f5d68e", "#8eecf5"]}
+            start={{ x: 0.6, y: 0.1 }}
+            style={{
+              borderRadius: 20,
+            }}
           >
-            <MaterialIcons name="access-time" color="white" size={30} />
-            <Text style={styles.iconText}>Attendance Log</Text>
-          </TouchableOpacity>
+            <LinearGradient
+              colors={["#eff58e", "transparent"]}
+              start={{ x: 1, y: 1 }}
+              end={{ x: 0.5, y: 0.5 }}
+              style={{
+                borderRadius: 20,
+              }}
+            >
+              <View style={{ padding: 10 }}>
+                <View style={{ width: "100%", alignItems: "flex-end" }}>
+                  <TouchableOpacity>
+                    <Text style={{ color: "white", fontSize: 14 }}>
+                      VIEW ALL
+                    </Text>
+                  </TouchableOpacity>
+                </View>
 
-          <TouchableOpacity
-            style={[styles.iconContainer, { backgroundColor: "#f72789" }]}
-          >
-            <MaterialIcons name="assignment" color="white" size={30} />
-            <Text style={styles.iconText}>Timesheets</Text>
-          </TouchableOpacity>
+                <View
+                  style={{
+                    width: "100%",
+                    paddingHorizontal: 30,
+                    justifyContent: "space-between",
+                    flexDirection: "row",
+                  }}
+                >
+                  <View style={{ flexDirection: "row", alignItems: "center" }}>
+                    <MaterialIcons
+                      name="calendar-today"
+                      color="white"
+                      size={35}
+                    />
+                    <Text style={{ color: "white", marginLeft: 5 }}>
+                      CALENDAR
+                    </Text>
+                  </View>
 
-          <TouchableOpacity
-            style={[styles.iconContainer, { backgroundColor: "#27c1f7" }]}
-          >
-            <MaterialIcons name="beach-access" color="white" size={30} />
-            <Text style={styles.iconText}>Leave</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[styles.iconContainer, { backgroundColor: "#dc27f7" }]}
-          >
-            <MaterialIcons name="person" color="white" size={30} />
-            <Text style={styles.iconText}>HR Request</Text>
-          </TouchableOpacity>
+                  <View style={{ alignItems: "center" }}>
+                    <Text
+                      style={{ color: "white", fontSize: 30, fontWeight: 400 }}
+                    >
+                      28 Nov
+                    </Text>
+                    <Text style={{ color: "white", fontSize: 16 }}>Diwali</Text>
+                  </View>
+                </View>
+              </View>
+            </LinearGradient>
+          </LinearGradient>
         </View>
       </View>
     </View>
@@ -296,15 +368,19 @@ const HomePage = () => {
 };
 
 const styles = StyleSheet.create({
+  iconLabelContainer: {
+    flexDirection: "column",
+    alignItems: "center",
+  },
   iconContainer: {
-    width: 70,
-    height: 80,
+    width: 60,
+    height: 60,
     borderRadius: 15,
     alignItems: "center",
     justifyContent: "center",
   },
   iconText: {
-    color: "white",
+    color: "#000",
     marginTop: 8,
   },
 });

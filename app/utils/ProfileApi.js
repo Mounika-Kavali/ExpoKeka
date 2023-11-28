@@ -18,20 +18,20 @@ export const employeeDetailsApi = async ({ userId, dispatch }) => {
   }
 };
 
-export const FileUploader = async ({ formData }) => {
-  console.log(formData._parts, "FORMDATA");
-  // const file = formData._parts.find((part) => part[0] === "file")[1];
-  // const name = formData._parts.find((part) => part[0] === "name")[1];
-  // const description = formData._parts.find((part) => part[0] === "uri")[1].uri;
-
-  // const payload = {
-  //   name,
-  //   description,
-  //   file,
-  // };
-  // console.log(payload,"PAYLOAD")
+export const FileUploader = async (data) => {
   try {
-    const response = await axios.post(`${FILE_UPLOAD_API}`, formData);
+    console.log(data, "data");
+
+    const inputArray = data._parts;
+    console.log(inputArray, "inputArray");
+    
+    const response = await axios.post(`${FILE_UPLOAD_API}`, {
+      method: "post",
+      body: inputArray,
+      headers: {
+        "Content-Type": "multipart/form-data; boundary=some-unique-string",
+      },
+    });
     console.log("Document upload successful:", response.data);
   } catch (error) {
     console.error("Error uploading document:", error);

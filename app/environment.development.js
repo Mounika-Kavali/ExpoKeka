@@ -8,7 +8,7 @@ export const LOGIN_API = `${PRIME_URL}login/`;
 
 //PROFILE TAB
 export const EMPLOYEE_DETAILS_API = `${PRIME_URL}employee-details/`;
-export const FILE_UPLOAD_API = `${PRIME_URL}upload/`;
+export const FILE_UPLOAD_API = `${BASE_URL}upload/`;
 
 //LEAVES TAB
 export const LEAVES_TRACKING_API = `${PRIME_URL}leaveshistory/`;

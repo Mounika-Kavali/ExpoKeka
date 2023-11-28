@@ -30,12 +30,9 @@ const ProfilePage = () => {
   };
 
   const leaves_summary = state.leaves.empLeavesSummary;
-  const annual_leaves_consumed =
-    leaves_summary.total_annual_leaves -
-    (leaves_summary.sick_leaves_consumed +
-      leaves_summary.casual_leaves_consumed);
+
   const available_annual_leaves =
-    leaves_summary.total_annual_leaves - annual_leaves_consumed;
+    leaves_summary.total_annual_leaves - leaves_summary.leaves_consumed;
   const available_sick_leaves =
     leaves_summary.total_sick_leaves - leaves_summary.sick_leaves_consumed;
   const available_casual_leaves =

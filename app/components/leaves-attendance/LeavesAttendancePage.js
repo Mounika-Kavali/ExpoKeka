@@ -34,16 +34,12 @@ const LeavesAttendancePage = () => {
     });
   };
   const leaves_summary = state.leaves.empLeavesSummary;
-  const annual_leaves_consumed =
-    leaves_summary.total_annual_leaves -
-    (leaves_summary.sick_leaves_consumed +
-      leaves_summary.casual_leaves_consumed);
 
   const AllLeaves = {
     1: {
       id: 1,
       label: "Annual Leaves",
-      consumedLeaves: annual_leaves_consumed,
+      consumedLeaves: leaves_summary.leaves_consumed,
       totalLeaves: leaves_summary.total_annual_leaves,
       styles: { borderColor: "#008B8B", backgroundColor: "#a5d9ed" },
     },
