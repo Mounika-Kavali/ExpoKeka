@@ -4,6 +4,7 @@ import SegmentedControlTab from "react-native-segmented-control-tab";
 
 import UpcomingLeavesTab from "../components/leaves-attendance/UpcomingLeavesTab";
 import PastLeavesTab from "../components/leaves-attendance/PastLeavesTab";
+import { FONTS } from "../constants/Assets";
 
 const LeavesTabs = () => {
   const [tabIndexSelect, setTabIndex] = useState(0);
@@ -25,22 +26,28 @@ const LeavesTabs = () => {
         tabsContainerStyle={{
           width: "70%",
           borderRadius: 15,
-          backgroundColor: "#e3e3e4",//light gray
-        }} 
+          backgroundColor: "#e3e3e4", //light gray
+        }}
         tabStyle={{
           backgroundColor: "#e3e3e4", //light gray
           borderWidth: 0,
           borderRadius: 15,
           borderColor: "transparent", // removes blue line partition.
-          
         }}
         activeTabStyle={{
           backgroundColor: "#3f3f94",
-          paddingHorizontal:40,
+          paddingHorizontal: 25,
         }}
-        
-        tabTextStyle={{ color: "black", fontSize: 16,}}
-        activeTabTextStyle={{ color: "white", fontSize: 18, }}
+        tabTextStyle={{
+          color: "black",
+          fontSize: 18,
+          fontFamily: FONTS.RobotoMedium,
+        }}
+        activeTabTextStyle={{
+          color: "white",
+          fontSize: 18,
+          fontFamily: FONTS.RobotoMedium,
+        }}
       />
 
       {tabIndexSelect === 0 && (

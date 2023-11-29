@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { View, ScrollView } from "react-native";
+import { View, Text, ScrollView } from "react-native";
 import { AppContext, AppDispatchContext } from "../../utils/AppContext";
 import { leavesTrackingApi } from "../../utils/LeavesApi";
 import { LeavesListItem } from "../ListItem";
@@ -36,16 +36,24 @@ function UpcomingLeavesTab() {
         />
       ) : (
         <>
-          {upcomingLeavesData.map((item) => (
-            <LeavesListItem
-              key={item.id}
-              value={`${item.from_date} - ${item.to_date}`}
-              status={item.status}
-              applyDays={item.number_of_days}
-              leaveType={item.leave_type}
-              approvedBy={item.approved_by}
-            />
-          ))}
+          {upcomingLeavesData.length > 0 ? (
+            upcomingLeavesData.map((item) => (
+              <LeavesListItem
+                key={item.id}
+                value={`${item.from_date} - ${item.to_date}`}
+                status={item.status}
+                applyDays={item.number_of_days}
+                leaveType={item.leave_type}
+                approvedBy={item.approved_by}
+              />
+            ))
+          ) : (
+            <>
+              <Text style={{ marginVertical: 30 }}>
+                No Upcoming Leaves Applied!
+              </Text>
+            </>
+          )}
         </>
       )}
     </View>

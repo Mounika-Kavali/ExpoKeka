@@ -79,10 +79,20 @@ const LeavesAttendancePage = () => {
           }}
         >
           <View style={gridStyles.title}>
-            <Text style={styles.h4}>All Leaves</Text>
+            <Text style={{ fontFamily: FONTS.RobotoRegular, fontSize: 20 }}>
+              All Leaves
+            </Text>
 
             <TouchableOpacity onPress={handleApplyLeave}>
-              <Text style={[styles.btn, styles.h6]}> + Apply Leave</Text>
+              <Text
+                style={[
+                  styles.btn,
+                  { fontSize: 14, fontFamily: FONTS.RobotoRegular },
+                ]}
+              >
+                {" "}
+                + Apply Leave
+              </Text>
             </TouchableOpacity>
           </View>
 
@@ -134,7 +144,7 @@ const gridStyles = StyleSheet.create({
     justifyContent: "space-between",
     flexDirection: "row",
     marginHorizontal: 20,
-    marginTop: 5,
+    marginVertical: 5,
   },
 });
 

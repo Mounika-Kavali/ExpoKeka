@@ -6,6 +6,8 @@ import { AppContext } from "../utils/AppContext";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { LinearGradient } from "expo-linear-gradient";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import { holidayslistApi } from "../utils/HomeApi";
+import { HolidaysListModal } from "../modals/HolidaysListModal";
 
 const HomePage = () => {
   const state = useContext(AppContext);
@@ -18,16 +20,25 @@ const HomePage = () => {
   const [currentDateTime, setCurrentDateTime] = useState("");
   const [checkInTime, setCheckInTime] = useState(null);
   const [checkOutTime, setCheckOutTime] = useState(null);
+  const [holidaysList, setHolidayList] = useState([]);
+  const [openHolidaysModal, setHolidaysModal] = useState(false);
 
   useEffect(() => {
+    fetchHolidaysList();
+
     // Update the time every second
     const interval = setInterval(() => {
       setCurrentTime(getCurrentTime());
     }, 1000);
-
     // Clear the interval when the component unmounts
     return () => clearInterval(interval);
   }, []);
+
+  const fetchHolidaysList = async () => {
+    const { holidays_list } = await holidayslistApi();
+    console.log(holidays_list, "holidays_list");
+    setHolidayList(holidays_list);
+  };
 
   const getCurrentTime = () => {
     const now = new Date();
@@ -144,10 +155,24 @@ const HomePage = () => {
               marginTop: 40,
             }}
           >
-            <Text style={{ color: "#fff", fontSize: 28 }}>
+            <Text
+              style={{
+                color: "#fff",
+                fontSize: 28,
+                fontFamily: FONTS.RobotoMedium,
+              }}
+            >
               Hello, {empDetails.employee_name}
             </Text>
-            <Text style={{ color: "#fff", fontSize: 18 }}>{formattedDate}</Text>
+            <Text
+              style={{
+                color: "#fff",
+                fontSize: 18,
+                fontFamily: FONTS.RobotoRegular,
+              }}
+            >
+              {formattedDate}
+            </Text>
           </View>
         </ImageBackground>
       </View>
@@ -173,13 +198,27 @@ const HomePage = () => {
             margin: 15,
           }}
         >
-          <Text style={{ color: "#959494" }}>Logged In Duration</Text>
-          <Text style={{ color: "#4c994c", fontWeight: 600 }}>
+          <Text
+            style={{
+              color: "#959494",
+              fontSize: 14,
+              fontFamily: FONTS.RobotoRegular,
+            }}
+          >
+            Logged In Duration
+          </Text>
+          <Text
+            style={{
+              color: "#4c994c",
+              fontSize: 12,
+              fontFamily: FONTS.RobotoBold,
+            }}
+          >
             REQUEST LEAVE
           </Text>
         </View>
         <View style={{ alignItems: "center" }}>
-          <Text style={{ fontSize: 30 }}>{currentTime}</Text>
+          <Text>{currentTime}</Text>
         </View>
 
         <View
@@ -192,7 +231,9 @@ const HomePage = () => {
           }}
         >
           <View>
-            <Text>Check In</Text>
+            <Text style={{ fontSize: 12, fontFamily: FONTS.RobotoRegular }}>
+              Check In
+            </Text>
             <View
               style={{
                 alignItems: "center",
@@ -213,7 +254,9 @@ const HomePage = () => {
           </View>
           <Text style={{ fontSize: 30 }}>-</Text>
           <View>
-            <Text>Check Out</Text>
+            <Text style={{ fontSize: 12, fontFamily: FONTS.RobotoRegular }}>
+              Check Out
+            </Text>
             <View
               style={{
                 alignItems: "center",
@@ -229,8 +272,21 @@ const HomePage = () => {
           </View>
         </View>
         <View style={{ marginHorizontal: 30, marginTop: 15 }}>
-          <Text>
-            <Text style={{ color: "#2030d9" }}>{calculateDuration()}</Text>
+          <Text
+            style={{
+              fontFamily: FONTS.RobotoMedium,
+              fontSize: 12,
+            }}
+          >
+            <Text
+              style={{
+                color: "#2030d9",
+                fontFamily: FONTS.RobotoMedium,
+                fontSize: 14,
+              }}
+            >
+              {calculateDuration()}
+            </Text>
             Since Last Login
           </Text>
         </View>
@@ -246,7 +302,7 @@ const HomePage = () => {
                 borderRadius: 15,
               }}
             >
-              <Text style={{ fontSize: 15, fontFamily: FONTS.RobotoMedium }}>
+              <Text style={{ fontSize: 16, fontFamily: FONTS.RobotoMedium }}>
                 {!checkInTime ? "CHECK IN" : "CHECK OUT"}
               </Text>
             </View>
@@ -323,8 +379,14 @@ const HomePage = () => {
             >
               <View style={{ padding: 10 }}>
                 <View style={{ width: "100%", alignItems: "flex-end" }}>
-                  <TouchableOpacity>
-                    <Text style={{ color: "white", fontSize: 14 }}>
+                  <TouchableOpacity onPress={() => setHolidaysModal(true)}>
+                    <Text
+                      style={{
+                        color: "#b046f7",
+                        fontSize: 12,
+                        fontFamily: FONTS.RobotoBold,
+                      }}
+                    >
                       VIEW ALL
                     </Text>
                   </TouchableOpacity>
@@ -333,7 +395,7 @@ const HomePage = () => {
                 <View
                   style={{
                     width: "100%",
-                    paddingHorizontal: 30,
+                    paddingHorizontal: 20,
                     justifyContent: "space-between",
                     flexDirection: "row",
                   }}
@@ -344,23 +406,52 @@ const HomePage = () => {
                       color="white"
                       size={35}
                     />
-                    <Text style={{ color: "white", marginLeft: 5 }}>
+                    <Text
+                      style={{
+                        color: "white",
+                        marginLeft: 5,
+                        fontSize: 14,
+                        fontFamily: FONTS.RobotoMedium,
+                      }}
+                    >
                       CALENDAR
                     </Text>
                   </View>
 
                   <View style={{ alignItems: "center" }}>
                     <Text
-                      style={{ color: "white", fontSize: 30, fontWeight: 400 }}
+                      style={{
+                        color: "#fb9055",
+                        fontSize: 30,
+                        fontFamily: FONTS.RobotoMedium,
+                      }}
                     >
                       28 Nov
                     </Text>
-                    <Text style={{ color: "white", fontSize: 16 }}>Diwali</Text>
+                    <Text
+                      style={{
+                        color: "#5569fb",
+                        fontSize: 16,
+                        fontFamily: FONTS.RobotoMedium,
+                      }}
+                    >
+                      Diwali
+                    </Text>
                   </View>
                 </View>
               </View>
             </LinearGradient>
           </LinearGradient>
+        </View>
+
+        <View>
+          <HolidaysListModal
+            show={openHolidaysModal}
+            title="Holidays"
+            showSpinner={false}
+            modalVisibility={() => setHolidaysModal(false)}
+            data={holidaysList}
+          />
         </View>
       </View>
     </View>
@@ -382,6 +473,8 @@ const styles = StyleSheet.create({
   iconText: {
     color: "#000",
     marginTop: 8,
+    fontSize: 12,
+    fontFamily: FONTS.RobotoMedium,
   },
 });
 export default HomePage;

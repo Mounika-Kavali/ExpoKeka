@@ -19,7 +19,7 @@ export const leavesSummaryApi = async ({ empId, dispatch }) => {
     return { success: true, leaves_summary };
   } catch (error) {
     dispatch({ type: "GET_EMP_LEAVES_SUMMARY_FAILURE", error });
-    console.error("Employee leaves histoty fetching error:", error);
+    console.error("Employee leaves history fetching error:", error);
   }
 };
 
@@ -37,12 +37,15 @@ export const leavesTrackingApi = async ({ empId, dispatch }) => {
   }
 };
 
-export const applyLeaveApi = async ({ leaveDetails }) => {
+export const applyLeaveApi = async ({ leaveDetails, dispatch }) => {
   try {
+    dispatch({ type: "POST_LEAVEAPPLY_DETAILS_PENDING" });
     const response = await axios.post(`${LEAVE_APPLY_API}`, leaveDetails);
     const status = response.data;
+    dispatch({ type: "POST_LEAVEAPPLY_DETAILS_SUCCESS" });
     return { success: true, status };
   } catch (error) {
+    dispatch({ type: "POST_LEAVEAPPLY_DETAILS_FAILURE", error });
     console.error("Leave Apply error:", error);
     return { success: false };
   }

@@ -47,7 +47,8 @@ const ApplyLeave = () => {
   const dispatch = useContext(AppDispatchContext);
   const state = useContext(AppContext);
   const empId = state.profile.empId;
-  const loader = state.leaves.isLoading;
+  const loader = state.leaves.isLoading; // loader in bottomModal
+  const hasError = state.leaves.hasError; // thumbdown in bottom Modal
   const leaves_summary = state.leaves.empLeavesSummary;
 
   const available_sick_leaves =
@@ -85,6 +86,8 @@ const ApplyLeave = () => {
     setManagerList(list);
   };
   const handleApplyLeave = async () => {
+    setModalVisible(true); //to get bottom modal
+
     const leaveDetails = {
       from_date: fromDate,
       to_date: toDate,
@@ -96,12 +99,10 @@ const ApplyLeave = () => {
     };
     console.log(leaveDetails, "leaveDetails");
     setLeaveDetails(leaveDetails);
-    await applyLeaveApi({ leaveDetails });
+    await applyLeaveApi({ leaveDetails, dispatch });
     leavesTrackingApi({ empId, dispatch });
 
-    setModalVisible(true); //to get bottom modal
     //to update leaves summary
-
     await leavesSummaryApi({
       empId,
       dispatch,
@@ -386,9 +387,10 @@ const ApplyLeave = () => {
             {
               <ConfirmModal
                 show={modalVisible}
-                title="Applied Leave"
+                title="Leave Request"
                 okButtonText="Done"
                 showSpinner={loader}
+                error={hasError}
                 okButtonColor="#865be3"
                 handleOkButton={() => setModalVisible(false)} // Close the modal when the OK button is pressed
               />

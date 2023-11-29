@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text } from "react-native";
 import styles from "../styles/index";
+import { FONTS } from "../constants/Assets";
 
 export const ProfileDataListItem = ({ label, value }) => (
   <View
@@ -14,15 +15,22 @@ export const ProfileDataListItem = ({ label, value }) => (
       marginBottom: 15,
     }}
   >
-    <Text style={{ width: "45%", fontWeight: "600", fontSize: 18 }}>
+    <Text
+      style={{
+        width: "40%",
+        fontWeight: "600",
+        fontSize: 16,
+        fontFamily: FONTS.RobotoRegular,
+      }}
+    >
       {label}
     </Text>
     <Text
       style={{
-        width: "55%",
+        width: "60%",
         textAlign: "right",
-        fontWeight: "400",
-        fontSize: 16,
+        fontFamily: FONTS.RobotoRegular,
+        fontSize: 14,
         color: "#3e2e7e",
       }}
     >
@@ -41,12 +49,14 @@ export const LeavesListItem = ({
   const ListItem = ({ title, subtitle, styles }) => {
     return (
       <View style={styles}>
-        <Text>{title}</Text>
+        <Text style={{ fontSize: 14, fontFamily: FONTS.RobotoRegular }}>
+          {title}
+        </Text>
         <Text
           style={{
             width: "100%",
-            color: "black",
-            fontWeight: "bold",
+            fontSize: 14,
+            fontFamily: FONTS.RobotoBold,
           }}
         >
           {subtitle}
@@ -171,54 +181,61 @@ export const LeavesOverviewListItem = ({
   leaveStyles,
 }) => {
   return (
-    <View  style={{ width: 150,justifyContent:"space-around" }}>
-        <View
-          style={[
-            leaveStyles,
-            {
-              width: "100%",
-              borderWidth: 2,
-              borderRadius: 10,
-              paddingHorizontal: 5,
-              margin: 10,
-            },
-          ]}
+    <View style={{ width: 150, justifyContent: "space-around" }}>
+      <View
+        style={[
+          leaveStyles,
+          {
+            width: "100%",
+            borderWidth: 2,
+            borderRadius: 10,
+            paddingHorizontal: 5,
+            margin: 10,
+          },
+        ]}
+      >
+        <Text
+          style={{
+            textAlign: "left",
+            paddingTop: 5,
+            paddingBottom: 10,
+            paddingLeft: 5,
+            fontSize: 16,
+            fontFamily: FONTS.RobotoBold,
+          }}
         >
-          <Text
-            style={[
-              styles.h5,
-              {
-                textAlign: "left",
-                paddingTop: 5,
-                paddingBottom: 10,
-                paddingLeft: 5,
-              },
-            ]}
-          >
-            {label}
-          </Text>
+          {label}
+        </Text>
 
-          <View>
-            <View
+        <View>
+          <View
+            style={{
+              flexDirection: "row",
+              paddingLeft: 5,
+              alignItems: "baseline",
+            }}
+          >
+            <Text
               style={{
-                flexDirection: "row",
-                paddingLeft: 5,
+                fontSize: 30,
+                fontFamily: FONTS.RobotoBold,
               }}
             >
-              <Text style={{fontSize: 30,fontWeight:600, lineHeight:40,}}>{consumedLeaves}</Text>
-              {totalLeaves && (
-                <Text
-                  style={{
-                    fontSize: 20,
-                    lineHeight:45,
-                  }}
-                >
-                  /{totalLeaves}
-                </Text>
-              )}
-            </View>
+              {consumedLeaves}
+            </Text>
+            {totalLeaves && (
+              <Text
+                style={{
+                  fontSize: 20,
+                  fontFamily: FONTS.RobotoRegular,
+                }}
+              >
+                /{totalLeaves}
+              </Text>
+            )}
           </View>
         </View>
+      </View>
     </View>
   );
 };

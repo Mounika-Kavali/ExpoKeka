@@ -39,7 +39,6 @@ const styles = StyleSheet.create({
   },
 
   input: {
-   
     paddingTop: 10, // to display label text within the field
     fontSize: 18,
   },

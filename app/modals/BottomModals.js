@@ -1,12 +1,17 @@
 import React, { useState } from "react";
-import { useEffect } from "react";
 import { Modal, StyleSheet, Text, Pressable, View } from "react-native";
-import { ActivityIndicator } from "react-native-paper";
+import LoadingSpinner from "../components/LoadingSpinner";
+import {
+  ThumbUpAnimated,
+  ThumbDownAnimated,
+} from "../../assets/images/svg-images/ThumbAnimations";
+import { FONTS } from "../constants/Assets";
 
 const ConfirmModal = ({
   show,
   title,
   message,
+  error,
   okButtonText,
   okButtonColor,
   showSpinner,
@@ -18,15 +23,17 @@ const ConfirmModal = ({
         <View style={styles.modalView}>
           <Text style={styles.modalText}>{title}</Text>
 
-          {showSpinner && <ActivityIndicator size="large" color="#0000ff" />}
+          {showSpinner ? (
+            <LoadingSpinner visible={true} size={60} />
+          ) : error ? (
+            <ThumbDownAnimated />
+          ) : (
+            <ThumbUpAnimated />
+          )}
 
           <Text style={styles.modalText}>{message}</Text>
           <Pressable
-            style={[
-              styles.button,
-              styles.buttonClose,
-              { backgroundColor: okButtonColor },
-            ]}
+            style={[styles.button, { backgroundColor: okButtonColor }]}
             onPress={() => {
               handleOkButton();
             }}
@@ -45,8 +52,7 @@ const styles = StyleSheet.create({
   },
   modalView: {
     width: "100%",
-
-    backgroundColor: "#c6f7f8",
+    backgroundColor: "#fff",
     borderRadius: 20,
     padding: 35,
     alignItems: "center",
@@ -66,20 +72,17 @@ const styles = StyleSheet.create({
     padding: 10,
     elevation: 2,
   },
-  buttonOpen: {
-    backgroundColor: "#F194FF",
-  },
-  buttonClose: {
-    backgroundColor: "#2196F3",
-  },
   textStyle: {
     color: "white",
-    fontWeight: "bold",
+    fontSize: 14,
+    fontFamily: FONTS.RobotoRegular,
     textAlign: "center",
+    paddingHorizontal: 10,
   },
   modalText: {
-    marginBottom: 15,
     textAlign: "center",
+    fontSize: 24,
+    fontFamily: FONTS.RobotoBold,
   },
 });
 

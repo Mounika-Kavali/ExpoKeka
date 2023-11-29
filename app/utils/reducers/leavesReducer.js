@@ -41,6 +41,22 @@ const leavesReducer = (state = initialState, action) => {
         isLoading: false,
         hasError: action.error,
       };
+    case "POST_LEAVEAPPLY_DETAILS_PENDING":
+      return {
+        ...state,
+        isLoading: true,
+      };
+    case "POST_LEAVEAPPLY_DETAILS_SUCCESS":
+      return {
+        ...state,
+        isLoading: false,
+      };
+    case "POST_LEAVEAPPLY_DETAILS_FAILURE":
+      return {
+        ...state,
+        isLoading: false,
+        hasError: action.error,
+      };
     default:
       return state;
   }

@@ -5,6 +5,7 @@ const PRIME_URL = "https://udaykiran15.pythonanywhere.com/api/";
 export const LOGIN_API = `${PRIME_URL}login/`;
 
 //HOMETAB
+export const HOLIDAYS_LIST_API = `${PRIME_URL}holidays-list/`;
 
 //PROFILE TAB
 export const EMPLOYEE_DETAILS_API = `${PRIME_URL}employee-details/`;

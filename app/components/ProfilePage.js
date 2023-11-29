@@ -71,13 +71,21 @@ const ProfilePage = () => {
         <Text
           style={{
             color: "#fff",
+            fontSize: 12,
+            fontFamily: FONTS.RobotoMediumItalic,
           }}
         >
           {text}
         </Text>
       </View>
       <View style={{ marginVertical: 5 }}>
-        <Text style={{ fontSize: 24, color: "#83dece" }}>
+        <Text
+          style={{
+            fontSize: 24,
+            color: "#83dece",
+            fontFamily: FONTS.RobotoRegular,
+          }}
+        >
           {available_leaves}
         </Text>
       </View>
@@ -181,10 +189,22 @@ const ProfilePage = () => {
             ></View>
           </View>
           <View style={{ alignItems: "center" }}>
-            <Text style={{ color: "#fff", fontSize: 28 }}>
+            <Text
+              style={{
+                color: "#fff",
+                fontSize: 28,
+                fontFamily: FONTS.RobotoRegular,
+              }}
+            >
               {empDetails.employee_name}
             </Text>
-            <Text style={{ color: "#fff", fontSize: 18 }}>
+            <Text
+              style={{
+                color: "#fff",
+                fontSize: 18,
+                fontFamily: FONTS.RobotoRegular,
+              }}
+            >
               {empDetails.employee_role}
             </Text>
           </View>
