@@ -25,7 +25,6 @@ const HomePage = () => {
 
   useEffect(() => {
     fetchHolidaysList();
-
     // Update the time every second
     const interval = setInterval(() => {
       setCurrentTime(getCurrentTime());
@@ -36,9 +35,25 @@ const HomePage = () => {
 
   const fetchHolidaysList = async () => {
     const { holidays_list } = await holidayslistApi();
-    console.log(holidays_list, "holidays_list");
-    setHolidayList(holidays_list);
+    const formattedHolidays = holidays_list.map((holiday) => {
+      const date = new Date(holiday.date);
+      const day = date.getDate();
+      const month = date.toLocaleString("en-us", { month: "short" });
+      const year = date.getFullYear();
+
+      // Creating a new objects
+      return {
+        Date: `${day}`,
+        Month: `${month}`,
+        Year: `${year}`,
+        HolidayName: holiday.name,
+        NextHoliday: holiday.is_floater,
+      };
+    });
+    setHolidayList(formattedHolidays);
   };
+
+  const nextHolidayObj = holidaysList.find((holiday) => holiday.NextHoliday);
 
   const getCurrentTime = () => {
     const now = new Date();
@@ -417,33 +432,35 @@ const HomePage = () => {
                       CALENDAR
                     </Text>
                   </View>
-
-                  <View style={{ alignItems: "center" }}>
-                    <Text
-                      style={{
-                        color: "#fb9055",
-                        fontSize: 30,
-                        fontFamily: FONTS.RobotoMedium,
-                      }}
-                    >
-                      28 Nov
-                    </Text>
-                    <Text
-                      style={{
-                        color: "#5569fb",
-                        fontSize: 16,
-                        fontFamily: FONTS.RobotoMedium,
-                      }}
-                    >
-                      Diwali
-                    </Text>
-                  </View>
+                  {nextHolidayObj ? (
+                    <View style={{ alignItems: "center" }}>
+                      <Text
+                        style={{
+                          color: "#fb9055",
+                          fontSize: 30,
+                          fontFamily: FONTS.RobotoMedium,
+                        }}
+                      >
+                        {nextHolidayObj.Date} {nextHolidayObj.Month}
+                      </Text>
+                      <Text
+                        style={{
+                          color: "#5569fb",
+                          fontSize: 14,
+                          fontFamily: FONTS.RobotoMedium,
+                        }}
+                      >
+                        {nextHolidayObj.HolidayName}
+                      </Text>
+                    </View>
+                  ) : (
+                    ""
+                  )}
                 </View>
               </View>
             </LinearGradient>
           </LinearGradient>
         </View>
-
         <View>
           <HolidaysListModal
             show={openHolidaysModal}

@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text } from "react-native";
 import Modal from "react-native-modal";
 import { FONTS } from "../constants/Assets";
+import { ScrollView } from "react-native-gesture-handler";
 
 export const HolidaysListModal = ({
   show,
@@ -10,37 +11,46 @@ export const HolidaysListModal = ({
   modalVisibility,
   data,
 }) => {
-  const formattedHolidays = data.map((holiday) => {
-    const date = new Date(holiday.date);
-    const day = date.getDate();
-    const month = date.toLocaleString("en-us", { month: "short" });
+  const currentDate = new Date();
+  const currentYear = currentDate.getFullYear();
+  const currentMonth = currentDate.toLocaleString("en-us", { month: "short" });
+  const currentDay = currentDate.getDate();
 
-    // Creating a new object with formatted date and month
-    return {
-      formattedDate: `${day} ${month}`,
-    };
+  const upcomingHolidays = data.filter((holiday) => {
+    const holidayYear = parseInt(holiday.Year);
+    const holidayMonth = holiday.Month;
+    const holidayDay = parseInt(holiday.Date);
+
+    // Compare the year, month, and date
+    if (
+      holidayYear > currentYear ||
+      (holidayYear === currentYear && holidayMonth > currentMonth) ||
+      (holidayYear === currentYear &&
+        holidayMonth === currentMonth &&
+        holidayDay > currentDay)
+    ) {
+      return true;
+    }
+
+    return false;
   });
+  // console.log(upcomingHolidays, "upcomingHolidays");
 
-  const customDates = () => {
-    return (
-      <View style={{ width: "20%", height: 200, alignItems: "center" }}>
-        <View>
-          <Text
-            style={{
-              backgroundColor: "#457",
-              fontSize: 20,
-              fontFamily: FONTS.RobotoBold,
-            }}
-          >
-            Jan
-          </Text>
-        </View>
-        <View>
-          <Text style={{ fontSize: 30, fontFamily: FONTS.RobotoBold }}>23</Text>
-        </View>
-      </View>
-    );
+  const backgroundColorOfMonth = {
+    Jan: "#9d95f7",
+    Feb: "#f7d295",
+    Mar: "#febdfd",
+    Apr: "#95f7e7",
+    May: "#d295f7",
+    Jun: "#f795b0",
+    Jul: "#bdf795",
+    Aug: "#f7c995",
+    Sep: "#f5f795",
+    Oct: "#6ebe86",
+    Nov: "#8ac8db",
+    Dec: "#c88adb",
   };
+
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       <Modal
@@ -53,32 +63,84 @@ export const HolidaysListModal = ({
       >
         <View
           style={{
-            width: "90%",
+            height: 400, // for fixed modal height
+            width: "100%",
             backgroundColor: "white",
             padding: 20,
             borderRadius: 10,
           }}
         >
-          <Text style={{ fontSize: 20 }}>{title}</Text>
-          {/* STRUCTURE */}
-          <View style={{ width: "30%", alignItems: "center", borderWidth: 1 }}>
-            <View style={{ width: "100%", backgroundColor: "#457" }}>
-              <Text
-                style={{
-                  textAlign: "center",
-                  fontSize: 20,
-                  fontFamily: FONTS.RobotoBold,
-                }}
-              >
-                Jan
-              </Text>
-            </View>
+          <Text
+            style={{
+              fontSize: 20,
+              fontFamily: FONTS.RobotoMedium,
+              marginBottom: 15,
+            }}
+          >
+            {title}
+          </Text>
+
+          <ScrollView>
             <View>
-              <Text style={{ fontSize: 30, fontFamily: FONTS.RobotoBold }}>
-                23
-              </Text>
+              {data.map((holiday, index) => (
+                <View
+                  key={index}
+                  style={{ flexDirection: "row", alignItems: "center" }}
+                >
+                  <View
+                    style={{
+                      width: "30%",
+                      alignItems: "center",
+                      borderWidth: 1,
+                      marginBottom: 20,
+                    }}
+                  >
+                    <View
+                      style={{
+                        width: "100%",
+                        backgroundColor: backgroundColorOfMonth[holiday.Month],
+                      }}
+                    >
+                      <Text
+                        style={{
+                          textAlign: "center",
+                          color: holiday.UpcomingHoliday ? "#000" : "#e6e4e5",
+                          paddingVertical: 3,
+                          fontSize: 20,
+                          fontFamily: FONTS.RobotoBold,
+                        }}
+                      >
+                        {holiday.Month}
+                      </Text>
+                    </View>
+                    <View>
+                      <Text
+                        style={{
+                          fontSize: 24,
+                          fontFamily: FONTS.RobotoBold,
+                          color: holiday.UpcomingHoliday ? "#000" : "#e6e4e5",
+                        }}
+                      >
+                        {holiday.Date}
+                      </Text>
+                    </View>
+                  </View>
+                  <View>
+                    <Text
+                      style={{
+                        margin: 10,
+                        fontSize: 16,
+                        fontFamily: FONTS.RobotoRegular,
+                        color: holiday.UpcomingHoliday ? "#000" : "#cccbcc",
+                      }}
+                    >
+                      {holiday.HolidayName}
+                    </Text>
+                  </View>
+                </View>
+              ))}
             </View>
-          </View>
+          </ScrollView>
         </View>
       </Modal>
     </View>
