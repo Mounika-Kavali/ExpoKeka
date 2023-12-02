@@ -11,30 +11,7 @@ export const HolidaysListModal = ({
   modalVisibility,
   data,
 }) => {
-  const currentDate = new Date();
-  const currentYear = currentDate.getFullYear();
-  const currentMonth = currentDate.toLocaleString("en-us", { month: "short" });
-  const currentDay = currentDate.getDate();
-
-  const upcomingHolidays = data.filter((holiday) => {
-    const holidayYear = parseInt(holiday.Year);
-    const holidayMonth = holiday.Month;
-    const holidayDay = parseInt(holiday.Date);
-
-    // Compare the year, month, and date
-    if (
-      holidayYear > currentYear ||
-      (holidayYear === currentYear && holidayMonth > currentMonth) ||
-      (holidayYear === currentYear &&
-        holidayMonth === currentMonth &&
-        holidayDay > currentDay)
-    ) {
-      return true;
-    }
-
-    return false;
-  });
-  // console.log(upcomingHolidays, "upcomingHolidays");
+  //   console.log(data, "DATA");
 
   const backgroundColorOfMonth = {
     Jan: "#9d95f7",

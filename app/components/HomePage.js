@@ -8,8 +8,10 @@ import { LinearGradient } from "expo-linear-gradient";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { holidayslistApi } from "../utils/HomeApi";
 import { HolidaysListModal } from "../modals/HolidaysListModal";
+import { useNavigation } from "@react-navigation/native";
 
 const HomePage = () => {
+  const navigation = useNavigation();
   const state = useContext(AppContext);
   const empDetails = state.profile.empDetails;
 
@@ -36,10 +38,16 @@ const HomePage = () => {
   const fetchHolidaysList = async () => {
     const { holidays_list } = await holidayslistApi();
     const formattedHolidays = holidays_list.map((holiday) => {
-      const date = new Date(holiday.date);
+      const date = new Date(holiday.date); //2023-01-16T00:00:00.000Z
       const day = date.getDate();
       const month = date.toLocaleString("en-us", { month: "short" });
       const year = date.getFullYear();
+
+      let upcomingHoliday = false;
+      const currentDate = new Date(); //2023-12-01T06:00:53.515Z
+      if (currentDate < date) {
+        upcomingHoliday = true;
+      }
 
       // Creating a new objects
       return {
@@ -48,6 +56,7 @@ const HomePage = () => {
         Year: `${year}`,
         HolidayName: holiday.name,
         NextHoliday: holiday.is_floater,
+        UpcomingHoliday: upcomingHoliday,
       };
     });
     setHolidayList(formattedHolidays);
@@ -336,6 +345,7 @@ const HomePage = () => {
         <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
           <View style={styles.iconLabelContainer}>
             <TouchableOpacity
+              onPress={() => navigation.navigate("Attendance Log")}
               style={[styles.iconContainer, { backgroundColor: "#f7b627" }]}
             >
               <MaterialIcons name="access-time" color="white" size={30} />

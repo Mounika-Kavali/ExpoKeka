@@ -4,8 +4,9 @@ import { NavigationContainer } from "@react-navigation/native";
 // Define your screens and navigator here
 import LoginScreen from "../screens/LoginScreen";
 import MyTabs from "./BottomTabNavigator";
-import applyLeave from "../components/leaves-attendance/ApplyLeave";
+import ApplyLeave from "../components/leaves-attendance/ApplyLeave";
 import OnboardingScreen from "../screens/OnboardingScreen";
+import AttendanceLogScreen from "../screens/AttendanceLogScreen";
 
 const Stack = createStackNavigator();
 
@@ -19,7 +20,8 @@ const AppNavigator = () => {
         <Stack.Screen name="Onboarding" component={OnboardingScreen} />
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Main" component={MyTabs} />
-        <Stack.Screen name="ApplyLeave" component={applyLeave} />
+        <Stack.Screen name="ApplyLeave" component={ApplyLeave} />
+        <Stack.Screen name="Attendance Log" component={AttendanceLogScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
